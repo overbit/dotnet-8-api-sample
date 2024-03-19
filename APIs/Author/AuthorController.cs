@@ -120,6 +120,11 @@ namespace MyService.APIs.Author
 
         #region Relationships
 
+        /// <summary>
+        /// Get all TodoItems of an Author
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}/todoItems")]
         public async Task<IActionResult> GetTodoItems(long id)
         {
@@ -133,6 +138,12 @@ namespace MyService.APIs.Author
             return Ok(authors);
         }
 
+        /// <summary>
+        /// Connect a TodoItem to an Author
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="todoItemId"></param>
+        /// <returns></returns>
         [HttpPost("{id}/todoItems")]
         public async Task<IActionResult> ConnectAuthors(long id, [Required] long todoItemId)
         {
@@ -154,7 +165,12 @@ namespace MyService.APIs.Author
             return NoContent();
         }
 
-
+        /// <summary>
+        /// Disconnect a TodoItem from an Author
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="todoItemId"></param>
+        /// <returns></returns>
         [HttpDelete("{id}/todoItems")]
         public async Task<IActionResult> DisconnectAuthors(long id, [Required] long todoItemId)
         {
