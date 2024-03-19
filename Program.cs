@@ -5,6 +5,12 @@ using MyService.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+// Add services to the container.
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<ITodoItemsService, TodoItemsService>();
+builder.Services.AddScoped<IWorkspacesService, WorkspacesService>();
+
 builder.Services.AddDbContext<MyServiceContext>(opt =>
     opt.UseInMemoryDatabase("TodoList"));
 

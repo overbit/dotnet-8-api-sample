@@ -9,6 +9,5 @@ public class AuthorDto
     public long Id { get; set; }
     public string? Name { get; set; }
 
-    public WorkspaceDto? Workspace { get; }
-    public ICollection<TodoItemDto>? TodoItems { get; }
+    public ICollection<TodoItemDto>? TodoItems { get; set; }
 }
