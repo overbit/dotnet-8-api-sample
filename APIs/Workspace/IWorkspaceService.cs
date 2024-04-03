@@ -1,4 +1,4 @@
-using MyService.APIs.Workspace.Dtos;
+using MyService.APIs.Dtos;
 
 public interface IWorkspacesService
 {

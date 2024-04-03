@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
-using MyService.APIs.Author.Dtos;
+using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
-using MyService.APIs.Todo.Dtos;
 using MyService.Infrastructure;
 using MyService.Infrastructure.Models;
 

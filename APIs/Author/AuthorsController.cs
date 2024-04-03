@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using MyService.APIs.Author.Dtos;
+using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
 
 [Route("api/[controller]")]

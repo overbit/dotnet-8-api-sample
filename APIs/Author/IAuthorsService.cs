@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using MyService.APIs.Author.Dtos;
+using MyService.APIs.Dtos;
 using MyService.Infrastructure.Models;
 
 
@@ -11,7 +11,7 @@ public interface IAuthorsService
 
     public Task UpdateAuthor(long id, AuthorDto authorDto);
 
-    public Task<AuthorDto> CreateAuthor(AuthorDto authorDto);
+    public Task<AuthorDto> CreateAuthor(AuthorCreateInput authorDto);
 
     public Task DeleteAuthor(long id);
 

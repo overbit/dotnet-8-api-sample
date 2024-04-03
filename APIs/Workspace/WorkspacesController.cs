@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
-using MyService.APIs.Workspace.Dtos;
 
 
 [Route("api/[controller]")]

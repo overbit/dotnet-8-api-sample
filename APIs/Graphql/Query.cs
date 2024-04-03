@@ -2,9 +2,7 @@ using GraphQL;
 using GraphQL.Conventions.Relay;
 using GraphQL.MicrosoftDI;
 using GraphQL.Types;
-using MyService.APIs.Author.Dtos;
-using MyService.APIs.Todo.Dtos;
-using MyService.APIs.Workspace.Dtos;
+using MyService.APIs.Dtos;
 
 namespace MyService.APIs.Graphql;
 

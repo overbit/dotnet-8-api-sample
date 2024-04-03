@@ -2,7 +2,7 @@ using GraphQL;
 using GraphQL.Conventions.Relay;
 using GraphQL.MicrosoftDI;
 using GraphQL.Types;
-using MyService.APIs.Author.Dtos;
+using MyService.APIs.Dtos;
 
 namespace MyService.APIs.Graphql;
 [ImplementViewer(OperationType.Mutation)]
@@ -17,6 +17,6 @@ public class GqlMutation : ObjectGraphType
             .Resolve()
             .WithScope()
             .WithService<IAuthorsService>()
-            .ResolveAsync(async (context, service) => await service.CreateAuthor(context.GetArgument<AuthorDto>("author")));
+            .ResolveAsync(async (context, service) => await service.CreateAuthor(context.GetArgument<AuthorCreateInput>("author")));
     }
 }

@@ -1,6 +1,6 @@
 using GraphQL.Types;
 
-namespace MyService.APIs.Author.Dtos;
+namespace MyService.APIs.Dtos;
 
 public class AuthorInputType : InputObjectGraphType
 {

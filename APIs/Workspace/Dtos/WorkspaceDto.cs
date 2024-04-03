@@ -1,4 +1,4 @@
-namespace MyService.APIs.Workspace.Dtos;
+namespace MyService.APIs.Dtos;
 
 public class WorkspaceDto
 {

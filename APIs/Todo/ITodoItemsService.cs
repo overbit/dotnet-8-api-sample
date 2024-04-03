@@ -1,7 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using MyService.APIs.Author.Dtos;
-using MyService.APIs.Todo.Dtos;
-
+using MyService.APIs.Dtos;
 
 public interface ITodoItemsService
 {

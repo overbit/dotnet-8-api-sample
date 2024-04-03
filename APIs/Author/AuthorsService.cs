@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
-using MyService.APIs.Author.Dtos;
+using MyService.APIs.Dtos;
+using MyService.APIs.Dtos.Extensions;
 using MyService.APIs.Errors;
 using MyService.Infrastructure;
 using MyService.Infrastructure.Models;
@@ -68,17 +69,23 @@ public class AuthorsService : IAuthorsService
         }
     }
 
-    public async Task<AuthorDto> CreateAuthor(AuthorDto authorDto)
+    public async Task<AuthorDto> CreateAuthor(AuthorCreateInput inputDto)
     {
-        var author = new Author
+        var model = new Author
         {
-            Id = authorDto.Id,
-            Name = authorDto.Name,
+            Name = inputDto.Name,
         };
-        _context.Authors.Add(author);
+        _context.Authors.Add(model);
         await _context.SaveChangesAsync();
 
-        return authorDto;
+        var result = await _context.FindAsync<Author>(model.Id);
+
+        if (result == null)
+        {
+            throw new NotFoundException();
+        }
+
+        return result.ToDto();
     }
 
     public async Task DeleteAuthor(long id)

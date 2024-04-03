@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
-using MyService.APIs.Workspace.Dtos;
 using MyService.Infrastructure;
 
 public class WorkspacesService : IWorkspacesService
