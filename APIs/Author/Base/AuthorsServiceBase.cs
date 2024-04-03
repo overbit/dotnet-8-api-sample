@@ -92,7 +92,7 @@ public abstract class AuthorsServiceBase : IAuthorsService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<TodoItem>> TodoItems(long id)
+    public async Task<IEnumerable<TodoItemDto>> TodoItems(long id)
     {
         var author = await _context.Authors.FindAsync(id);
         if (author == null)
@@ -100,7 +100,7 @@ public abstract class AuthorsServiceBase : IAuthorsService
             throw new NotFoundException();
         }
 
-        return author.TodoItems.ToList();
+        return author.TodoItems.Select(todo => todo.ToDto()).ToList();
     }
 
     public async Task ConnectTodoItem(long id, [Required] long todoItemId)

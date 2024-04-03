@@ -15,7 +15,7 @@ public interface IAuthorsService
 
     public Task DeleteAuthor(long id);
 
-    public Task<IEnumerable<TodoItem>> TodoItems(long id);
+    public Task<IEnumerable<TodoItemDto>> TodoItems(long id);
 
     public Task ConnectTodoItem(long id, [Required] long todoItemId);
 
