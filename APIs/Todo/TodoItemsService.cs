@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using MyService.APIs.Dtos;
+using MyService.APIs.Dtos.Extensions;
 using MyService.APIs.Errors;
 using MyService.Infrastructure;
 using MyService.Infrastructure.Models;
@@ -77,19 +78,19 @@ public class TodoItemsService : ITodoItemsService
         throw new NotImplementedException();
     }
 
-    public async Task<TodoItemDto> CreateTodoItem(TodoItemDto dto, long workspaceId)
+    public async Task<TodoItemDto> CreateTodoItem(TodoItemCreateInput dto)
     {
         var todo = new TodoItem()
         {
             Id = dto.Id,
             Name = dto.Name,
             IsComplete = dto.IsComplete,
-            WorkspaceId = workspaceId
+            WorkspaceId = dto.workspaceId
         };
         _context.TodoItems.Add(todo);
         await _context.SaveChangesAsync();
 
-        return dto;
+        return todo.ToDto();
     }
 
     public async Task DeleteTodoItem(long id)

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using MyService.APIs.Dtos;
 
+
 public interface ITodoItemsService
 {
     public Task<IEnumerable<TodoItemDto>> TodoItems();
@@ -9,7 +10,7 @@ public interface ITodoItemsService
 
     public Task UpdateTodoItem(long id, TodoItemDto dto);
 
-    public Task<TodoItemDto> CreateTodoItem(TodoItemDto dto, long workspaceId);
+    public Task<TodoItemDto> CreateTodoItem(TodoItemCreateInput dto);
 
     public Task DeleteTodoItem(long id);
 

@@ -61,9 +61,9 @@ public class TodoItemsController : ControllerBase
     // POST: api/TodoItems
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<TodoItemDto>> CreateTodoItem(TodoItemDto todoItemDto, long workspaceId)
+    public async Task<ActionResult<TodoItemDto>> CreateTodoItem(TodoItemCreateInput input)
     {
-        var dto = await _service.CreateTodoItem(todoItemDto, workspaceId);
+        var dto = await _service.CreateTodoItem(input);
         return CreatedAtAction(nameof(TodoItem), new { id = dto.Id }, dto);
     }
 
