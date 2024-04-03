@@ -16,7 +16,7 @@ public class TodoItemsService : ITodoItemsService
         _context = context;
     }
 
-    public async Task<IEnumerable<TodoItemDto>> GetTodoItems()
+    public async Task<IEnumerable<TodoItemDto>> TodoItems()
     {
         var todos = await _context.TodoItems.ToListAsync();
         return todos.ConvertAll(
@@ -28,7 +28,7 @@ public class TodoItemsService : ITodoItemsService
             });
     }
 
-    public async Task<TodoItemDto> GetTodoItem(long id)
+    public async Task<TodoItemDto> TodoItem(long id)
     {
         var todo = await _context.TodoItems.FindAsync(id);
 
@@ -45,7 +45,7 @@ public class TodoItemsService : ITodoItemsService
         };
     }
 
-    public async Task PutTodoItem(long id, TodoItemDto dto)
+    public async Task UpdateTodoItem(long id, TodoItemDto dto)
     {
         var todo = new TodoItem()
         {
@@ -78,7 +78,7 @@ public class TodoItemsService : ITodoItemsService
         throw new NotImplementedException();
     }
 
-    public async Task<TodoItemDto> PostTodoItem(TodoItemDto dto, long workspaceId)
+    public async Task<TodoItemDto> CreateTodoItem(TodoItemDto dto, long workspaceId)
     {
         var todo = new TodoItem()
         {
@@ -106,7 +106,7 @@ public class TodoItemsService : ITodoItemsService
 
     }
 
-    public async Task<IEnumerable<AuthorDto>> GetAuthors(long id)
+    public async Task<IEnumerable<AuthorDto>> Authors(long id)
     {
         var todoItem = await _context.TodoItems.FindAsync(id);
         if (todoItem == null)

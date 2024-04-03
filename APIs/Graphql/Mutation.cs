@@ -16,7 +16,7 @@ public class GqlMutation : ObjectGraphType
             .Arguments(new QueryArgument<AuthorInputType> { Name = "author" })
             .Resolve()
             .WithScope()
-            .WithService<IAuthorService>()
-            .ResolveAsync(async (context, service) => await service.PostAuthor(context.GetArgument<AuthorDto>("author")));
+            .WithService<IAuthorsService>()
+            .ResolveAsync(async (context, service) => await service.CreateAuthor(context.GetArgument<AuthorDto>("author")));
     }
 }

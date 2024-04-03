@@ -5,17 +5,17 @@ using MyService.APIs.Todo.Dtos;
 
 public interface ITodoItemsService
 {
-    public Task<IEnumerable<TodoItemDto>> GetTodoItems();
+    public Task<IEnumerable<TodoItemDto>> TodoItems();
 
-    public Task<TodoItemDto> GetTodoItem(long id);
+    public Task<TodoItemDto> TodoItem(long id);
 
-    public Task PutTodoItem(long id, TodoItemDto dto);
+    public Task UpdateTodoItem(long id, TodoItemDto dto);
 
-    public Task<TodoItemDto> PostTodoItem(TodoItemDto dto, long workspaceId);
+    public Task<TodoItemDto> CreateTodoItem(TodoItemDto dto, long workspaceId);
 
     public Task DeleteTodoItem(long id);
 
-    public Task<IEnumerable<AuthorDto>> GetAuthors(long id);
+    public Task<IEnumerable<AuthorDto>> Authors(long id);
 
     public Task ConnectAuthor(long id, [Required] long authorId);
 

@@ -12,7 +12,7 @@ public class WorkspacesService : IWorkspacesService
         _context = context;
     }
 
-    public async Task<IEnumerable<WorkspaceDto>> GetWorkspaces()
+    public async Task<IEnumerable<WorkspaceDto>> Workspaces()
     {
         var workspaces = await _context.Workspaces.ToListAsync();
 
@@ -23,7 +23,7 @@ public class WorkspacesService : IWorkspacesService
         });
     }
 
-    public async Task<WorkspaceDto> GetWorkspace(long id)
+    public async Task<WorkspaceDto> Workspace(long id)
     {
         var workspace = await _context.Workspaces.FindAsync(id);
 
@@ -39,7 +39,7 @@ public class WorkspacesService : IWorkspacesService
         };
     }
 
-    public async Task PutWorkspace(long id, WorkspaceDto workspaceDto)
+    public async Task UpdateWorkspace(long id, WorkspaceDto workspaceDto)
     {
         _context.Entry(workspaceDto).State = EntityState.Modified;
 
@@ -60,7 +60,7 @@ public class WorkspacesService : IWorkspacesService
         }
     }
 
-    public async Task<WorkspaceDto> PostWorkspace(WorkspaceDto workspaceDto)
+    public async Task<WorkspaceDto> CreateWorkspace(WorkspaceDto workspaceDto)
     {
         var workspace = new MyService.Infrastructure.Models.Workspace()
         {

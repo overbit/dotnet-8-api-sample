@@ -5,16 +5,16 @@ using MyService.APIs.Errors;
 using MyService.Infrastructure;
 using MyService.Infrastructure.Models;
 
-public class AuthorService : IAuthorService
+public class AuthorsService : IAuthorsService
 {
     private readonly MyServiceContext _context;
 
-    public AuthorService(MyServiceContext context)
+    public AuthorsService(MyServiceContext context)
     {
         _context = context;
     }
 
-    public async Task<IEnumerable<AuthorDto>> GetAuthors()
+    public async Task<IEnumerable<AuthorDto>> Authors()
     {
         var authors = await _context.Authors.ToListAsync();
         return authors.ConvertAll(
@@ -25,7 +25,7 @@ public class AuthorService : IAuthorService
             });
     }
 
-    public async Task<AuthorDto> GetAuthor(long id)
+    public async Task<AuthorDto> Author(long id)
     {
         var author = await _context.Authors.FindAsync(id);
 
@@ -41,7 +41,7 @@ public class AuthorService : IAuthorService
         };
     }
 
-    public async Task PutAuthor(long id, AuthorDto authorDto)
+    public async Task UpdateAuthor(long id, AuthorDto authorDto)
     {
         var author = new Author
         {
@@ -68,7 +68,7 @@ public class AuthorService : IAuthorService
         }
     }
 
-    public async Task<AuthorDto> PostAuthor(AuthorDto authorDto)
+    public async Task<AuthorDto> CreateAuthor(AuthorDto authorDto)
     {
         var author = new Author
         {
@@ -93,7 +93,7 @@ public class AuthorService : IAuthorService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<TodoItem>> GetTodoItems(long id)
+    public async Task<IEnumerable<TodoItem>> TodoItems(long id)
     {
         var author = await _context.Authors.FindAsync(id);
         if (author == null)

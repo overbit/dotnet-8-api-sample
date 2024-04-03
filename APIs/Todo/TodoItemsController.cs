@@ -18,18 +18,18 @@ public class TodoItemsController : ControllerBase
 
     // GET: api/TodoItems
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TodoItemDto>>> GetTodoItems()
+    public async Task<ActionResult<IEnumerable<TodoItemDto>>> TodoItems()
     {
-        return Ok(await _service.GetTodoItems());
+        return Ok(await _service.TodoItems());
     }
 
     // GET: api/TodoItems/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<TodoItemDto>> GetTodoItem(long id)
+    public async Task<ActionResult<TodoItemDto>> TodoItem(long id)
     {
         try
         {
-            return await _service.GetTodoItem(id);
+            return await _service.TodoItem(id);
         }
         catch (NotFoundException)
         {
@@ -39,8 +39,8 @@ public class TodoItemsController : ControllerBase
 
     // PUT: api/TodoItems/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutTodoItem(long id, TodoItemDto todoItemDto)
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateTodoItem(long id, TodoItemDto todoItemDto)
     {
         if (id != todoItemDto.Id)
         {
@@ -49,7 +49,7 @@ public class TodoItemsController : ControllerBase
 
         try
         {
-            await _service.PutTodoItem(id, todoItemDto);
+            await _service.UpdateTodoItem(id, todoItemDto);
         }
         catch (NotFoundException)
         {
@@ -62,10 +62,10 @@ public class TodoItemsController : ControllerBase
     // POST: api/TodoItems
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<TodoItemDto>> PostTodoItem(TodoItemDto todoItemDto, long workspaceId)
+    public async Task<ActionResult<TodoItemDto>> CreateTodoItem(TodoItemDto todoItemDto, long workspaceId)
     {
-        var dto = await _service.PostTodoItem(todoItemDto, workspaceId);
-        return CreatedAtAction(nameof(GetTodoItem), new { id = dto.Id }, dto);
+        var dto = await _service.CreateTodoItem(todoItemDto, workspaceId);
+        return CreatedAtAction(nameof(TodoItem), new { id = dto.Id }, dto);
     }
 
     // DELETE: api/TodoItems/5
@@ -86,9 +86,9 @@ public class TodoItemsController : ControllerBase
 
 
     [HttpGet("{id}/authors")]
-    public async Task<ActionResult<IEnumerable<AuthorDto>>> GetAuthors(long id)
+    public async Task<ActionResult<IEnumerable<AuthorDto>>> Authors(long id)
     {
-        var authors = await _service.GetAuthors(id);
+        var authors = await _service.Authors(id);
         return Ok(authors);
     }
 

@@ -2,13 +2,13 @@ using MyService.APIs.Workspace.Dtos;
 
 public interface IWorkspacesService
 {
-    public Task<IEnumerable<WorkspaceDto>> GetWorkspaces();
+    public Task<IEnumerable<WorkspaceDto>> Workspaces();
 
-    public Task<WorkspaceDto> GetWorkspace(long id);
+    public Task<WorkspaceDto> Workspace(long id);
 
-    public Task PutWorkspace(long id, WorkspaceDto workspaceDto);
+    public Task UpdateWorkspace(long id, WorkspaceDto workspaceDto);
 
-    public Task<WorkspaceDto> PostWorkspace(WorkspaceDto workspaceDto);
+    public Task<WorkspaceDto> CreateWorkspace(WorkspaceDto workspaceDto);
     public Task DeleteWorkspace(long id);
 
 }

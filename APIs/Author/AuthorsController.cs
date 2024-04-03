@@ -5,29 +5,29 @@ using MyService.APIs.Errors;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AuthorController : ControllerBase
+public class AuthorsController : ControllerBase
 {
-    private readonly IAuthorService _service;
+    private readonly IAuthorsService _service;
 
-    public AuthorController(IAuthorService service)
+    public AuthorsController(IAuthorsService service)
     {
         _service = service;
     }
 
     // GET: api/author
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<AuthorDto>>> GetAuthors()
+    public async Task<ActionResult<IEnumerable<AuthorDto>>> Authors()
     {
-        return Ok(await _service.GetAuthors());
+        return Ok(await _service.Authors());
     }
 
     // GET: api/author/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<AuthorDto>> GetAuthor(long id)
+    public async Task<ActionResult<AuthorDto>> Author(long id)
     {
         try
         {
-            return await _service.GetAuthor(id);
+            return await _service.Author(id);
         }
         catch (NotFoundException)
         {
@@ -37,8 +37,8 @@ public class AuthorController : ControllerBase
 
     // PUT: api/author/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutAuthor(long id, AuthorDto authorDto)
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateAuthor(long id, AuthorDto authorDto)
     {
         if (id != authorDto.Id)
         {
@@ -47,7 +47,7 @@ public class AuthorController : ControllerBase
 
         try
         {
-            await _service.PutAuthor(id, authorDto);
+            await _service.UpdateAuthor(id, authorDto);
         }
         catch (NotFoundException)
         {
@@ -60,11 +60,11 @@ public class AuthorController : ControllerBase
     // POST: api/author
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<AuthorDto>> PostAuthor(AuthorDto authorDto)
+    public async Task<ActionResult<AuthorDto>> CreateAuthor(AuthorDto authorDto)
     {
-        await _service.PostAuthor(authorDto);
+        await _service.CreateAuthor(authorDto);
 
-        return CreatedAtAction(nameof(GetAuthor), new { id = authorDto.Id }, authorDto);
+        return CreatedAtAction(nameof(Author), new { id = authorDto.Id }, authorDto);
     }
 
     // DELETE: api/author/5
@@ -89,11 +89,11 @@ public class AuthorController : ControllerBase
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id}/todoItems")]
-    public async Task<IActionResult> GetTodoItems(long id)
+    public async Task<IActionResult> TodoItems(long id)
     {
         try
         {
-            return Ok(await _service.GetTodoItems(id));
+            return Ok(await _service.TodoItems(id));
         }
         catch (NotFoundException)
         {

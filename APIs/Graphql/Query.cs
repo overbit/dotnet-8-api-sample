@@ -19,38 +19,38 @@ public class GqlQuery : ObjectGraphType<object>
         Field<ListGraphType<AutoRegisteringObjectGraphType<AuthorDto>>>("authors")
             .Resolve()
             .WithScope()
-            .WithService<IAuthorService>()
-            .ResolveAsync(async (context, service) => await service.GetAuthors());
+            .WithService<IAuthorsService>()
+            .ResolveAsync(async (context, service) => await service.Authors());
 
         Field<AutoRegisteringObjectGraphType<AuthorDto>>("author")
             .Resolve()
             .WithScope()
-            .WithService<IAuthorService>()
-            .ResolveAsync(async (context, service) => await service.GetAuthor(context.GetArgument<int>("id")));
+            .WithService<IAuthorsService>()
+            .ResolveAsync(async (context, service) => await service.Author(context.GetArgument<int>("id")));
 
         Field<ListGraphType<AutoRegisteringObjectGraphType<TodoItemDto>>>("todoItems")
             .Resolve()
             .WithScope()
             .WithService<ITodoItemsService>()
-            .ResolveAsync(async (context, service) => await service.GetTodoItems());
+            .ResolveAsync(async (context, service) => await service.TodoItems());
 
         Field<AutoRegisteringObjectGraphType<TodoItemDto>>("todoItem")
             .Resolve()
             .WithScope()
             .WithService<ITodoItemsService>()
-            .ResolveAsync(async (context, service) => await service.GetTodoItem(context.GetArgument<int>("id")));
+            .ResolveAsync(async (context, service) => await service.TodoItem(context.GetArgument<int>("id")));
 
         Field<ListGraphType<AutoRegisteringObjectGraphType<WorkspaceDto>>>("workspaces")
             .Resolve()
             .WithScope()
             .WithService<IWorkspacesService>()
-            .ResolveAsync(async (context, service) => await service.GetWorkspaces());
+            .ResolveAsync(async (context, service) => await service.Workspaces());
 
         Field<AutoRegisteringObjectGraphType<WorkspaceDto>>("workspace")
             .Resolve()
             .WithScope()
             .WithService<IWorkspacesService>()
-            .ResolveAsync(async (context, service) => await service.GetWorkspace(context.GetArgument<int>("id")));
+            .ResolveAsync(async (context, service) => await service.Workspace(context.GetArgument<int>("id")));
 
     }
 }
