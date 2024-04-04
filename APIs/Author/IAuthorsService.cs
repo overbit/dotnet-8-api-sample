@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using MyService.APIs.Dtos;
-using MyService.Infrastructure.Models;
 
+namespace MyService.APIs;
 
 public interface IAuthorsService
 {

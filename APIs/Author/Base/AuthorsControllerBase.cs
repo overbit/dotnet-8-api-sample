@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
 
+namespace MyService.APIs;
+
 [Route("api/[controller]")]
 [ApiController]
 public abstract class AuthorsControllerBase : ControllerBase

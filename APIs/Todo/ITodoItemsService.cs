@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using MyService.APIs.Dtos;
 
+namespace MyService.APIs;
 
 public interface ITodoItemsService
 {

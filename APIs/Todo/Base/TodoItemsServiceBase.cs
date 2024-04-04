@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using MyService.APIs.Dtos;
-using MyService.APIs.Dtos.Extensions;
+using MyService.APIs.Extensions;
 using MyService.APIs.Errors;
 using MyService.Infrastructure;
 using MyService.Infrastructure.Models;
 
+namespace MyService.APIs;
 
 public abstract class TodoItemsServiceBase : ITodoItemsService
 {

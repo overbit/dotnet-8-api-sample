@@ -1,5 +1,6 @@
 using MyService.Infrastructure;
 
+namespace MyService.APIs;
 
 public class TodoItemsService : TodoItemsServiceBase
 {

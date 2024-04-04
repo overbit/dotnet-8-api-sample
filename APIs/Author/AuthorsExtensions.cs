@@ -1,6 +1,7 @@
+using MyService.APIs.Dtos;
 using MyService.Infrastructure.Models;
 
-namespace MyService.APIs.Dtos.Extensions;
+namespace MyService.APIs.Extensions;
 public static class AuthorsExtensions
 {
     public static AuthorDto ToDto(this Author model)

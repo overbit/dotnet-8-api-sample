@@ -3,6 +3,7 @@ using GraphQL;
 using GraphQL.MicrosoftDI;
 using GraphQL.Types;
 using Microsoft.EntityFrameworkCore;
+using MyService.APIs;
 using MyService.APIs.Graphql;
 using MyService.Infrastructure;
 
