@@ -26,7 +26,7 @@ public abstract class AuthorsServiceBase : IAuthorsService
                                     .Where(wherePredicate)
                                     .ApplySkip(findManyArgs.Skip)
                                     .ApplyTake(findManyArgs.Take)
-                                    .ApplyOrderBy(findManyArgs.OrderBy)
+                                    .ApplyOrderBy(findManyArgs.SortBy)
                                     .ToListAsync();
 
         return authors.ConvertAll(author => author.ToDto());

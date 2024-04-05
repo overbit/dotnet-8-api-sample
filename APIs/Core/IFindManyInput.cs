@@ -5,7 +5,7 @@ public interface IFindManyInput<M, W>
 {
     public W? Where { get; set; }
 
-    public IEnumerable<OrderByInput>? OrderBy { get; set; }
+    public IEnumerable<string>? SortBy { get; set; }
 
     public int? Skip { get; set; }
 

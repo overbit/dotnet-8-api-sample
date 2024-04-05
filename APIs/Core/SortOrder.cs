@@ -1,8 +1,8 @@
 
 namespace MyService.APIs;
 
-public enum SortOrder
+internal enum SortDirection
 {
     Asc,
-    Des
+    Desc
 }
