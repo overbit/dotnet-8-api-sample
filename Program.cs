@@ -32,7 +32,10 @@ builder.Services.AddGraphQL(b => b
 
 // Add a DbContext to the container
 builder.Services.AddDbContext<MyServiceContext>(opt =>
-    opt.UseInMemoryDatabase("TodoList"));
+    // opt.UseInMemoryDatabase("TodoList")
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DbContext"))
+    );
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
