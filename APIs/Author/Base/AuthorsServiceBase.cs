@@ -5,6 +5,7 @@ using MyService.APIs.Extensions;
 using MyService.APIs.Errors;
 using MyService.Infrastructure;
 using MyService.Infrastructure.Models;
+using System.IO.Compression;
 
 namespace MyService.APIs;
 
@@ -17,9 +18,17 @@ public abstract class AuthorsServiceBase : IAuthorsService
         _context = context;
     }
 
-    public async Task<IEnumerable<AuthorDto>> Authors()
+    public async Task<IEnumerable<AuthorDto>> Authors(AuthorFindMany findManyArgs)
     {
-        var authors = await _context.Authors.ToListAsync();
+        var wherePredicate = findManyArgs.ToWherePredicate();
+
+        var authors = await _context.Authors
+                                    .Where(wherePredicate)
+                                    .ApplySkip(findManyArgs.Skip)
+                                    .ApplyTake(findManyArgs.Take)
+                                    .ApplyOrderBy(findManyArgs.OrderBy)
+                                    .ToListAsync();
+
         return authors.ConvertAll(author => author.ToDto());
     }
 
