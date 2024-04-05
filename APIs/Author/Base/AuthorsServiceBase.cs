@@ -20,10 +20,8 @@ public abstract class AuthorsServiceBase : IAuthorsService
 
     public async Task<IEnumerable<AuthorDto>> Authors(AuthorFindMany findManyArgs)
     {
-        var wherePredicate = findManyArgs.ToWherePredicate();
-
         var authors = await _context.Authors
-                                    .Where(wherePredicate)
+                                    .ApplyWhere(findManyArgs.Where)
                                     .ApplySkip(findManyArgs.Skip)
                                     .ApplyTake(findManyArgs.Take)
                                     .ApplyOrderBy(findManyArgs.SortBy)

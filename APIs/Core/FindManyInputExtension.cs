@@ -6,6 +6,29 @@ namespace MyService.APIs;
 
 public static class FindManyInputExtension
 {
+    public static IQueryable<M> ApplyWhere<M, W>(this IQueryable<M> queryable, W? where) where M : class
+    {
+        if (where == null)
+        {
+            return queryable;
+        }
+
+        var properties = typeof(W).GetProperties();
+        foreach (var property in properties)
+        {
+            var value = property.GetValue(where, null);
+            if (value == null)
+            {
+                continue;
+            }
+
+            queryable = queryable.Where($"{property.Name} == @0", value);
+        }
+
+        return queryable;
+    }
+
+
     public static IQueryable<M> ApplyTake<M>(this IQueryable<M> queryable, int? input) where M : class
     {
         if (input.HasValue)
