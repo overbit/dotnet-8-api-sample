@@ -8,7 +8,7 @@ public class RegularExpressionEnumerable : RegularExpressionAttribute
     public RegularExpressionEnumerable(string pattern)
         : base(pattern) { }
 
-    public override bool IsValid(object value)
+    public override bool IsValid(object? value)
     {
         if (value == null)
             return true;
@@ -16,7 +16,9 @@ public class RegularExpressionEnumerable : RegularExpressionAttribute
         if (value is not IEnumerable<string>)
             return false;
 
-        foreach (var val in value as IEnumerable<string>)
+        IEnumerable<string> values = value as IEnumerable<string> ?? [];
+
+        foreach (var val in values)
         {
             if (!Regex.IsMatch(val, Pattern))
                 return false;
