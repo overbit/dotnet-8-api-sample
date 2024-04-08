@@ -1,4 +1,3 @@
-
 namespace MyService.APIs;
 
 public interface IFindManyInput<M, W>

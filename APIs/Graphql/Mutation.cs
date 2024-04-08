@@ -5,6 +5,7 @@ using GraphQL.Types;
 using MyService.APIs.Dtos;
 
 namespace MyService.APIs.Graphql;
+
 [ImplementViewer(OperationType.Mutation)]
 public class GqlMutation : ObjectGraphType
 {
@@ -17,6 +18,9 @@ public class GqlMutation : ObjectGraphType
             .Resolve()
             .WithScope()
             .WithService<IAuthorsService>()
-            .ResolveAsync(async (context, service) => await service.CreateAuthor(context.GetArgument<AuthorCreateInput>("author")));
+            .ResolveAsync(
+                async (context, service) =>
+                    await service.CreateAuthor(context.GetArgument<AuthorCreateInput>("author"))
+            );
     }
 }

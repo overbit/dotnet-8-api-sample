@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using System.IO.Compression;
 using Microsoft.EntityFrameworkCore;
 using MyService.APIs.Dtos;
-using MyService.APIs.Extensions;
 using MyService.APIs.Errors;
+using MyService.APIs.Extensions;
 using MyService.Infrastructure;
 using MyService.Infrastructure.Models;
-using System.IO.Compression;
 
 namespace MyService.APIs;
 
@@ -20,12 +20,12 @@ public abstract class AuthorsServiceBase : IAuthorsService
 
     public async Task<IEnumerable<AuthorDto>> Authors(AuthorFindMany findManyArgs)
     {
-        var authors = await _context.Authors
-                                    .ApplyWhere(findManyArgs.Where)
-                                    .ApplySkip(findManyArgs.Skip)
-                                    .ApplyTake(findManyArgs.Take)
-                                    .ApplyOrderBy(findManyArgs.SortBy)
-                                    .ToListAsync();
+        var authors = await _context
+            .Authors.ApplyWhere(findManyArgs.Where)
+            .ApplySkip(findManyArgs.Skip)
+            .ApplyTake(findManyArgs.Take)
+            .ApplyOrderBy(findManyArgs.SortBy)
+            .ToListAsync();
 
         return authors.ConvertAll(author => author.ToDto());
     }
@@ -44,11 +44,7 @@ public abstract class AuthorsServiceBase : IAuthorsService
 
     public async Task UpdateAuthor(long id, AuthorDto authorDto)
     {
-        var author = new Author
-        {
-            Id = authorDto.Id,
-            Name = authorDto.Name,
-        };
+        var author = new Author { Id = authorDto.Id, Name = authorDto.Name, };
 
         _context.Entry(author).State = EntityState.Modified;
 
@@ -71,11 +67,7 @@ public abstract class AuthorsServiceBase : IAuthorsService
 
     public async Task<AuthorDto> CreateAuthor(AuthorCreateInput inputDto)
     {
-        var model = new Author
-        {
-            Id = inputDto.Id,
-            Name = inputDto.Name,
-        };
+        var model = new Author { Id = inputDto.Id, Name = inputDto.Name, };
         _context.Authors.Add(model);
         await _context.SaveChangesAsync();
 

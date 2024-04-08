@@ -1,4 +1,3 @@
-
 namespace MyService.APIs;
 
 internal enum SortDirection

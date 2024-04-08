@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using MyService.APIs.Dtos;
-using MyService.APIs.Extensions;
 using MyService.APIs.Errors;
+using MyService.APIs.Extensions;
 using MyService.Infrastructure;
 using MyService.Infrastructure.Models;
 
@@ -20,13 +20,12 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
     public async Task<IEnumerable<TodoItemDto>> TodoItems()
     {
         var todos = await _context.TodoItems.ToListAsync();
-        return todos.ConvertAll(
-            todo => new TodoItemDto
-            {
-                Id = todo.Id,
-                Name = todo.Name,
-                IsComplete = todo.IsComplete
-            });
+        return todos.ConvertAll(todo => new TodoItemDto
+        {
+            Id = todo.Id,
+            Name = todo.Name,
+            IsComplete = todo.IsComplete
+        });
     }
 
     public async Task<TodoItemDto> TodoItem(long id)
@@ -104,7 +103,6 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
 
         _context.TodoItems.Remove(todoItem);
         await _context.SaveChangesAsync();
-
     }
 
     public async Task<IEnumerable<AuthorDto>> Authors(long id)
@@ -115,12 +113,9 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
             throw new NotFoundException();
         }
 
-        return todoItem.Authors.Select(
-            author => new AuthorDto
-            {
-                Id = author.Id,
-                Name = author.Name
-            }).ToList();
+        return todoItem
+            .Authors.Select(author => new AuthorDto { Id = author.Id, Name = author.Name })
+            .ToList();
     }
 
     public async Task ConnectAuthor(long id, [Required] long authorId)
@@ -139,7 +134,6 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
 
         todoItem.Authors.Add(author);
         await _context.SaveChangesAsync();
-
     }
 
     public async Task DisconnectAuthor(long id, [Required] long authorId)

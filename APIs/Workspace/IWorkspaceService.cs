@@ -10,5 +10,4 @@ public interface IWorkspacesService
 
     public Task<WorkspaceDto> CreateWorkspace(WorkspaceDto workspaceDto);
     public Task DeleteWorkspace(long id);
-
 }

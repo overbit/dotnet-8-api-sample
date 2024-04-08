@@ -1,4 +1,3 @@
-
 namespace MyService.APIs.Dtos;
 
 public class AuthorFindUnique

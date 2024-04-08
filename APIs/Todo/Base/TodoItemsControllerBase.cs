@@ -84,7 +84,6 @@ public abstract class TodoItemsControllerBase : ControllerBase
         return NoContent();
     }
 
-
     [HttpGet("{id}/authors")]
     public async Task<ActionResult<IEnumerable<AuthorDto>>> Authors(long id)
     {
@@ -106,11 +105,9 @@ public abstract class TodoItemsControllerBase : ControllerBase
         return NoContent();
     }
 
-
     [HttpDelete("{id}/authors")]
     public async Task<IActionResult> DisconnectAuthors(long id, [Required] long authorId)
     {
-
         try
         {
             await _service.DisconnectAuthor(id, authorId);

@@ -24,7 +24,9 @@ public class GqlQuery : ObjectGraphType<object>
             .Resolve()
             .WithScope()
             .WithService<IAuthorsService>()
-            .ResolveAsync(async (context, service) => await service.Author(context.GetArgument<int>("id")));
+            .ResolveAsync(
+                async (context, service) => await service.Author(context.GetArgument<int>("id"))
+            );
 
         Field<ListGraphType<AutoRegisteringObjectGraphType<TodoItemDto>>>("todoItems")
             .Resolve()
@@ -33,10 +35,12 @@ public class GqlQuery : ObjectGraphType<object>
             .ResolveAsync(async (context, service) => await service.TodoItems());
 
         Field<AutoRegisteringObjectGraphType<TodoItemDto>>("todoItem")
-                .Resolve()
-                .WithScope()
-                .WithService<ITodoItemsService>()
-                .ResolveAsync(async (context, service) => await service.TodoItem(context.GetArgument<int>("id")));
+            .Resolve()
+            .WithScope()
+            .WithService<ITodoItemsService>()
+            .ResolveAsync(
+                async (context, service) => await service.TodoItem(context.GetArgument<int>("id"))
+            );
 
         Field<ListGraphType<AutoRegisteringObjectGraphType<WorkspaceDto>>>("workspaces")
             .Resolve()
@@ -45,10 +49,11 @@ public class GqlQuery : ObjectGraphType<object>
             .ResolveAsync(async (context, service) => await service.Workspaces());
 
         Field<AutoRegisteringObjectGraphType<WorkspaceDto>>("workspace")
-                .Resolve()
-                .WithScope()
-                .WithService<IWorkspacesService>()
-                .ResolveAsync(async (context, service) => await service.Workspace(context.GetArgument<int>("id")));
-
+            .Resolve()
+            .WithScope()
+            .WithService<IWorkspacesService>()
+            .ResolveAsync(
+                async (context, service) => await service.Workspace(context.GetArgument<int>("id"))
+            );
     }
 }

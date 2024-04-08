@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using MyService.APIs.Dtos;
 
 namespace MyService.APIs;
+
 public interface IAuthorsService
 {
     public Task<IEnumerable<AuthorDto>> Authors(AuthorFindMany findManyArgs);

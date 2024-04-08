@@ -18,7 +18,9 @@ public abstract class AuthorsControllerBase : ControllerBase
 
     // GET: api/author
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<AuthorDto>>> Authors([FromQuery] AuthorFindMany filter)
+    public async Task<ActionResult<IEnumerable<AuthorDto>>> Authors(
+        [FromQuery] AuthorFindMany filter
+    )
     {
         return Ok(await _service.Authors(filter));
     }
@@ -144,5 +146,4 @@ public abstract class AuthorsControllerBase : ControllerBase
 
         return NoContent();
     }
-
 }

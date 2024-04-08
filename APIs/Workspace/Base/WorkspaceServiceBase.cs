@@ -16,11 +16,7 @@ public class WorkspacesServiceBase : IWorkspacesService
     {
         var workspaces = await _context.Workspaces.ToListAsync();
 
-        return workspaces.ConvertAll(w => new WorkspaceDto
-        {
-            Id = w.Id,
-            Name = w.Name
-        });
+        return workspaces.ConvertAll(w => new WorkspaceDto { Id = w.Id, Name = w.Name });
     }
 
     public async Task<WorkspaceDto> Workspace(long id)
@@ -32,11 +28,7 @@ public class WorkspacesServiceBase : IWorkspacesService
             throw new NotFoundException();
         }
 
-        return new WorkspaceDto
-        {
-            Id = workspace.Id,
-            Name = workspace.Name
-        };
+        return new WorkspaceDto { Id = workspace.Id, Name = workspace.Name };
     }
 
     public async Task UpdateWorkspace(long id, WorkspaceDto workspaceDto)
