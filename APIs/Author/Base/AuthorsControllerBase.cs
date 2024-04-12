@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
@@ -26,12 +25,12 @@ public abstract class AuthorsControllerBase : ControllerBase
     }
 
     // GET: api/author/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<AuthorDto>> Author(long id)
+    [HttpGet("{Id}")]
+    public async Task<ActionResult<AuthorDto>> Author([FromRoute] AuthorIdDto idDto)
     {
         try
         {
-            return await _service.Author(id);
+            return await _service.Author(idDto);
         }
         catch (NotFoundException)
         {
@@ -39,19 +38,17 @@ public abstract class AuthorsControllerBase : ControllerBase
         }
     }
 
-    // PUT: api/author/5
+    // PATCH: api/author/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> UpdateAuthor(long id, AuthorDto authorDto)
+    [HttpPatch("{Id}")]
+    public async Task<IActionResult> UpdateAuthor(
+        [FromRoute] AuthorIdDto idDto,
+        [FromQuery] AuthorUpdateInput authorUpdateDto
+    )
     {
-        if (id != authorDto.Id)
-        {
-            return BadRequest();
-        }
-
         try
         {
-            await _service.UpdateAuthor(id, authorDto);
+            await _service.UpdateAuthor(idDto, authorUpdateDto);
         }
         catch (NotFoundException)
         {
@@ -72,12 +69,12 @@ public abstract class AuthorsControllerBase : ControllerBase
     }
 
     // DELETE: api/author/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTodoItem(long id)
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> DeleteTodoItem([FromRoute] AuthorIdDto idDto)
     {
         try
         {
-            await _service.DeleteAuthor(id);
+            await _service.DeleteAuthor(idDto);
         }
         catch (NotFoundException)
         {
@@ -90,14 +87,16 @@ public abstract class AuthorsControllerBase : ControllerBase
     /// <summary>
     /// Get all TodoItems of an Author
     /// </summary>
-    /// <param name="id"></param>
     /// <returns></returns>
-    [HttpGet("{id}/todoItems")]
-    public async Task<IActionResult> TodoItems(long id)
+    [HttpGet("{Id}/todoItems")]
+    public async Task<IActionResult> TodoItems(
+        [FromRoute] AuthorIdDto idDto,
+        [FromQuery] TodoItemFindMany filter
+    )
     {
         try
         {
-            return Ok(await _service.TodoItems(id));
+            return Ok(await _service.TodoItems(idDto, filter));
         }
         catch (NotFoundException)
         {
@@ -108,15 +107,15 @@ public abstract class AuthorsControllerBase : ControllerBase
     /// <summary>
     /// Connect a TodoItem to an Author
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="todoItemId"></param>
-    /// <returns></returns>
-    [HttpPost("{id}/todoItems")]
-    public async Task<IActionResult> ConnectTodoItem(long id, [Required] long todoItemId)
+    [HttpPost("{Id}/todoItems")]
+    public async Task<IActionResult> ConnectTodoItem(
+        [FromRoute] AuthorIdDto idDto,
+        [FromBody] TodoItemIdDto[] todoItemIds
+    )
     {
         try
         {
-            await _service.ConnectTodoItem(id, todoItemId);
+            await _service.ConnectTodoItems(idDto, todoItemIds);
         }
         catch (NotFoundException)
         {
@@ -129,15 +128,15 @@ public abstract class AuthorsControllerBase : ControllerBase
     /// <summary>
     /// Disconnect a TodoItem from an Author
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="todoItemId"></param>
-    /// <returns></returns>
-    [HttpDelete("{id}/todoItems")]
-    public async Task<IActionResult> DisconnectTodoItem(long id, [Required] long todoItemId)
+    [HttpDelete("{Id}/todoItems")]
+    public async Task<IActionResult> DisconnectTodoItem(
+        [FromRoute] AuthorIdDto idDto,
+        [FromBody] TodoItemIdDto[] todoItemIds
+    )
     {
         try
         {
-            await _service.DisconnectTodoItem(id, todoItemId);
+            await _service.DisconnectTodoItems(idDto, todoItemIds);
         }
         catch (NotFoundException)
         {

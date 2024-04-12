@@ -1,9 +1,8 @@
 namespace MyService.APIs.Dtos;
 
-public class AuthorDto
+public class AuthorDto : AuthorIdDto
 {
-    public long Id { get; set; }
     public string? Name { get; set; }
 
-    public ICollection<TodoItemDto>? TodoItems { get; set; }
+    public IEnumerable<TodoItemIdDto>? TodoItemIds { get; set; }
 }

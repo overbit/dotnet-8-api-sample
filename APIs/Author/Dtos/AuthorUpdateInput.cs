@@ -1,8 +1,8 @@
 namespace MyService.APIs.Dtos;
 
-public class AuthorCreateInput
+// Equal to AuthorCreateInput but with all properties optional
+public class AuthorUpdateInput
 {
-    public long? Id { get; set; }
     public string? Name { get; set; }
 
     public ICollection<TodoItemIdDto>? TodoItemIds { get; set; }

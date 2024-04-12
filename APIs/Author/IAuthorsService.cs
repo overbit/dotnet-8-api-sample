@@ -7,17 +7,20 @@ public interface IAuthorsService
 {
     public Task<IEnumerable<AuthorDto>> Authors(AuthorFindMany findManyArgs);
 
-    public Task<AuthorDto> Author(long id);
+    public Task<AuthorDto> Author(AuthorIdDto idDto);
 
-    public Task UpdateAuthor(long id, AuthorDto authorDto);
+    public Task UpdateAuthor(AuthorIdDto idDto, AuthorUpdateInput updateInput);
 
     public Task<AuthorDto> CreateAuthor(AuthorCreateInput authorDto);
 
-    public Task DeleteAuthor(long id);
+    public Task DeleteAuthor(AuthorIdDto idDto);
 
-    public Task<IEnumerable<TodoItemDto>> TodoItems(long id);
+    public Task<IEnumerable<TodoItemDto>> TodoItems(
+        AuthorIdDto idDto,
+        TodoItemFindMany todoItemFindMany
+    );
 
-    public Task ConnectTodoItem(long id, [Required] long todoItemId);
+    public Task ConnectTodoItems(AuthorIdDto idDto, TodoItemIdDto[] todoItemsId);
 
-    public Task DisconnectTodoItem(long id, [Required] long todoItemId);
+    public Task DisconnectTodoItems(AuthorIdDto idDto, TodoItemIdDto[] todoItemsId);
 }

@@ -12,5 +12,5 @@ public class Author
     [StringLength(100)]
     public string? Name { get; set; }
 
-    public ICollection<TodoItem> TodoItems { get; } = new List<TodoItem>(); // Many-to-Many
+    public ICollection<TodoItem> TodoItems { get; set; } = new List<TodoItem>(); // Many-to-Many
 }

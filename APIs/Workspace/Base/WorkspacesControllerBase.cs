@@ -4,7 +4,7 @@ using MyService.APIs.Errors;
 
 [Route("api/[controller]")]
 [ApiController]
-public class WorkspacesControllerBase : ControllerBase
+public abstract class WorkspacesControllerBase : ControllerBase
 {
     protected readonly IWorkspacesService _service;
 

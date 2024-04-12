@@ -1,6 +1,6 @@
 namespace MyService.APIs.Dtos;
 
-public class AuthorFindUnique
+public class TodoItemIdDto
 {
     public long Id { get; set; }
 }

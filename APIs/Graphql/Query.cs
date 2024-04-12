@@ -25,7 +25,8 @@ public class GqlQuery : ObjectGraphType<object>
             .WithScope()
             .WithService<IAuthorsService>()
             .ResolveAsync(
-                async (context, service) => await service.Author(context.GetArgument<int>("id"))
+                async (context, service) =>
+                    await service.Author(context.GetArgument<AuthorIdDto>("id"))
             );
 
         Field<ListGraphType<AutoRegisteringObjectGraphType<TodoItemDto>>>("todoItems")

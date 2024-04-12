@@ -1,10 +1,9 @@
 namespace MyService.APIs.Dtos;
 
-public class TodoItemDto
+public class TodoItemDto : TodoItemIdDto
 {
-    public long Id { get; set; }
     public string? Name { get; set; }
     public bool IsComplete { get; set; }
 
-    public ICollection<AuthorDto>? Authors { get; set; }
+    public ICollection<AuthorIdDto>? AuthorIds { get; set; }
 }

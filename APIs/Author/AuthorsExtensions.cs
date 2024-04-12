@@ -11,7 +11,14 @@ public static class AuthorsExtensions
         {
             Id = model.Id,
             Name = model.Name,
-            TodoItems = model.TodoItems.Select(x => x.ToDto()).ToList(),
+            TodoItemIds = model.TodoItems.Select(x => new TodoItemIdDto { Id = x.Id }),
         };
+    }
+
+    public static Author ToModel(this AuthorUpdateInput updateDto, AuthorIdDto idDto)
+    {
+        var author = new Author { Id = idDto.Id, Name = updateDto.Name, };
+
+        return author;
     }
 }
