@@ -11,11 +11,16 @@ public class TodoItem
     public string? Name { get; set; }
     public bool IsComplete { get; set; }
 
-    [Required] // Required one-to-many relationship
+    // Required one-to-many relationship
     public long WorkspaceId { get; set; } // Foreign Key of one-to-many relationship
 
     [ForeignKey(nameof(WorkspaceId))]
     public Workspace Workspace { get; set; } = null!; // one-to-many relationship
+
+    public long? TagId { get; set; } // Foreign Key of one-to-many relationship
+
+    [ForeignKey(nameof(TagId))]
+    public Tag? Tag { get; set; } // one-to-many relationship
 
     public ICollection<Author> Authors { get; set; } = new List<Author>(); // Many-to-Many
 }
