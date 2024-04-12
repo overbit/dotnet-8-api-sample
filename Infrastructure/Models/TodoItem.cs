@@ -11,7 +11,7 @@ public class TodoItem
     public string? Name { get; set; }
     public bool IsComplete { get; set; }
 
-    // [Required] Required one-to-many relationship
+    [Required] // Required one-to-many relationship
     public long WorkspaceId { get; set; } // Foreign Key of one-to-many relationship
 
     [ForeignKey(nameof(WorkspaceId))]

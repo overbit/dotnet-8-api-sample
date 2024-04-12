@@ -12,6 +12,7 @@ public static class TodoItemsExtensions
             Id = model.Id,
             Name = model.Name,
             IsComplete = model.IsComplete,
+            WorkspaceId = new WorkspaceIdDto { Id = model.WorkspaceId },
             AuthorIds = model.Authors.Select(x => new AuthorIdDto { Id = x.Id }).ToList()
         };
     }
