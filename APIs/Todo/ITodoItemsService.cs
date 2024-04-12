@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.CodeAnalysis.Elfie.Model.Structures;
 using MyService.APIs.Dtos;
 
 namespace MyService.APIs;
@@ -7,17 +8,17 @@ public interface ITodoItemsService
 {
     public Task<IEnumerable<TodoItemDto>> TodoItems();
 
-    public Task<TodoItemDto> TodoItem(long id);
+    public Task<TodoItemDto> TodoItem(TodoItemIdDto idDto);
 
-    public Task UpdateTodoItem(long id, TodoItemDto dto);
+    public Task UpdateTodoItem(TodoItemIdDto idDto, TodoItemUpdateInput updateDto);
 
-    public Task<TodoItemDto> CreateTodoItem(TodoItemCreateInput dto);
+    public Task<TodoItemDto> CreateTodoItem(TodoItemCreateInput createDto);
 
-    public Task DeleteTodoItem(long id);
+    public Task DeleteTodoItem(TodoItemIdDto idDto);
 
-    public Task<IEnumerable<AuthorDto>> Authors(long id);
+    public Task<IEnumerable<AuthorDto>> Authors(TodoItemIdDto idDto, AuthorFindMany authorFindMany);
 
-    public Task ConnectAuthor(long id, [Required] long authorId);
+    public Task ConnectAuthors(TodoItemIdDto idDto, AuthorIdDto[] todoItemsId);
 
-    public Task DisconnectAuthor(long id, [Required] long authorId);
+    public Task DisconnectAuthors(TodoItemIdDto idDto, AuthorIdDto[] todoItemsId);
 }

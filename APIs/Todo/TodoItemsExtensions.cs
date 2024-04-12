@@ -5,11 +5,6 @@ namespace MyService.APIs.Extensions;
 
 public static class TodoItemsExtensions
 {
-    public static TodoItemIdDto ToIdDto(this TodoItem model)
-    {
-        return new TodoItemIdDto { Id = model.Id };
-    }
-
     public static TodoItemDto ToDto(this TodoItem model)
     {
         return new TodoItemDto
@@ -19,5 +14,22 @@ public static class TodoItemsExtensions
             IsComplete = model.IsComplete,
             AuthorIds = model.Authors.Select(x => new AuthorIdDto { Id = x.Id }).ToList()
         };
+    }
+
+    public static TodoItem ToModel(this TodoItemUpdateInput updateDto, TodoItemIdDto idDto)
+    {
+        var todoItem = new TodoItem { Id = idDto.Id, Name = updateDto.Name, };
+
+        if (updateDto.IsComplete != null)
+        {
+            todoItem.IsComplete = updateDto.IsComplete.Value;
+        }
+
+        if (updateDto.workspaceId != null)
+        {
+            todoItem.WorkspaceId = updateDto.workspaceId.Value;
+        }
+
+        return todoItem;
     }
 }

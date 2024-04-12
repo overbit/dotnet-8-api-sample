@@ -24,12 +24,12 @@ public abstract class TodoItemsControllerBase : ControllerBase
     }
 
     // GET: api/TodoItems/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<TodoItemDto>> TodoItem(long id)
+    [HttpGet("{Id}")]
+    public async Task<ActionResult<TodoItemDto>> TodoItem([FromRoute] TodoItemIdDto idDto)
     {
         try
         {
-            return await _service.TodoItem(id);
+            return await _service.TodoItem(idDto);
         }
         catch (NotFoundException)
         {
@@ -39,17 +39,15 @@ public abstract class TodoItemsControllerBase : ControllerBase
 
     // PUT: api/TodoItems/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> UpdateTodoItem(long id, TodoItemDto todoItemDto)
+    [HttpPatch("{Id}")]
+    public async Task<IActionResult> UpdateTodoItem(
+        [FromRoute] TodoItemIdDto idDto,
+        [FromBody] TodoItemUpdateInput updateDto
+    )
     {
-        if (id != todoItemDto.Id)
-        {
-            return BadRequest();
-        }
-
         try
         {
-            await _service.UpdateTodoItem(id, todoItemDto);
+            await _service.UpdateTodoItem(idDto, updateDto);
         }
         catch (NotFoundException)
         {
@@ -69,12 +67,12 @@ public abstract class TodoItemsControllerBase : ControllerBase
     }
 
     // DELETE: api/TodoItems/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTodoItem(long id)
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> DeleteTodoItem([FromRoute] TodoItemIdDto idDto)
     {
         try
         {
-            await _service.DeleteTodoItem(id);
+            await _service.DeleteTodoItem(idDto);
         }
         catch (NotFoundException)
         {
@@ -84,19 +82,25 @@ public abstract class TodoItemsControllerBase : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("{id}/authors")]
-    public async Task<ActionResult<IEnumerable<AuthorDto>>> Authors(long id)
+    [HttpGet("{Id}/authors")]
+    public async Task<ActionResult<IEnumerable<AuthorDto>>> Authors(
+        [FromRoute] TodoItemIdDto idDto,
+        [FromQuery] AuthorFindMany filter
+    )
     {
-        var authors = await _service.Authors(id);
+        var authors = await _service.Authors(idDto, filter);
         return Ok(authors);
     }
 
-    [HttpPost("{id}/authors")]
-    public async Task<IActionResult> ConnectAuthor(long id, [Required] long authorId)
+    [HttpPost("{Id}/authors")]
+    public async Task<IActionResult> ConnectAuthor(
+        [FromRoute] TodoItemIdDto idDto,
+        [FromBody] AuthorIdDto[] authorIds
+    )
     {
         try
         {
-            await _service.ConnectAuthor(id, authorId);
+            await _service.ConnectAuthors(idDto, authorIds);
         }
         catch (NotFoundException)
         {
@@ -105,12 +109,15 @@ public abstract class TodoItemsControllerBase : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}/authors")]
-    public async Task<IActionResult> DisconnectAuthors(long id, [Required] long authorId)
+    [HttpDelete("{Id}/authors")]
+    public async Task<IActionResult> DisconnectAuthors(
+        [FromRoute] TodoItemIdDto idDto,
+        [FromBody] AuthorIdDto[] authorIds
+    )
     {
         try
         {
-            await _service.DisconnectAuthor(id, authorId);
+            await _service.DisconnectAuthors(idDto, authorIds);
         }
         catch (NotFoundException)
         {

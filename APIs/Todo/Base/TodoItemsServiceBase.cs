@@ -5,6 +5,7 @@ using MyService.APIs.Errors;
 using MyService.APIs.Extensions;
 using MyService.Infrastructure;
 using MyService.Infrastructure.Models;
+using NuGet.Packaging;
 
 namespace MyService.APIs;
 
@@ -28,9 +29,9 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
         });
     }
 
-    public async Task<TodoItemDto> TodoItem(long id)
+    public async Task<TodoItemDto> TodoItem(TodoItemIdDto idDto)
     {
-        var todo = await _context.TodoItems.FindAsync(id);
+        var todo = await _context.TodoItems.FindAsync(idDto.Id);
 
         if (todo == null)
         {
@@ -45,16 +46,18 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
         };
     }
 
-    public async Task UpdateTodoItem(long id, TodoItemDto dto)
+    public async Task UpdateTodoItem(TodoItemIdDto idDto, TodoItemUpdateInput updateDto)
     {
-        var todo = new TodoItem()
-        {
-            Id = dto.Id,
-            Name = dto.Name,
-            IsComplete = dto.IsComplete
-        };
+        var todoItem = updateDto.ToModel(idDto);
 
-        _context.Entry(todo).State = EntityState.Modified;
+        if (updateDto.AuthorIds != null)
+        {
+            todoItem.Authors = await _context
+                .Authors.Where(todo => updateDto.AuthorIds.Select(t => t.Id).Contains(todo.Id))
+                .ToListAsync();
+        }
+
+        _context.Entry(todoItem).State = EntityState.Modified;
 
         try
         {
@@ -62,7 +65,7 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!TodoItemExists(id))
+            if (!TodoItemExists(idDto))
             {
                 throw new NotFoundException();
             }
@@ -71,11 +74,6 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
                 throw;
             }
         }
-    }
-
-    private bool TodoItemExists(long id)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<TodoItemDto> CreateTodoItem(TodoItemCreateInput dto)
@@ -93,9 +91,9 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
         return todo.ToDto();
     }
 
-    public async Task DeleteTodoItem(long id)
+    public async Task DeleteTodoItem(TodoItemIdDto idDto)
     {
-        var todoItem = await _context.TodoItems.FindAsync(id);
+        var todoItem = await _context.TodoItems.FindAsync(idDto.Id);
         if (todoItem == null)
         {
             throw new NotFoundException();
@@ -105,9 +103,12 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<AuthorDto>> Authors(long id)
+    public async Task<IEnumerable<AuthorDto>> Authors(
+        TodoItemIdDto idDto,
+        AuthorFindMany authorFindMany
+    )
     {
-        var todoItem = await _context.TodoItems.FindAsync(id);
+        var todoItem = await _context.TodoItems.FindAsync(idDto.Id);
         if (todoItem == null)
         {
             throw new NotFoundException();
@@ -118,39 +119,55 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
             .ToList();
     }
 
-    public async Task ConnectAuthor(long id, [Required] long authorId)
+    public async Task ConnectAuthors(TodoItemIdDto idDto, AuthorIdDto[] authorIdDtos)
     {
-        var todoItem = await _context.TodoItems.FindAsync(id);
+        var todoItem = await _context
+            .TodoItems.Include(t => t.Authors)
+            .FirstOrDefaultAsync(x => x.Id == idDto.Id);
+
         if (todoItem == null)
         {
             throw new NotFoundException();
         }
 
-        var author = await _context.Authors.FindAsync(authorId);
-        if (author == null)
+        var authors = await _context
+            .Authors.Where(a => authorIdDtos.Select(x => x.Id).Contains(a.Id))
+            .ToListAsync();
+
+        if (authors.Count == 0)
         {
             throw new NotFoundException();
         }
 
-        todoItem.Authors.Add(author);
+        var newAuthors = authors.Except(todoItem.Authors);
+
+        todoItem.Authors.AddRange(newAuthors);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DisconnectAuthor(long id, [Required] long authorId)
+    public async Task DisconnectAuthors(TodoItemIdDto idDto, AuthorIdDto[] authorIdDtos)
     {
-        var todoItem = await _context.TodoItems.FindAsync(id);
+        var todoItem = await _context
+            .TodoItems.Include(t => t.Authors)
+            .FirstOrDefaultAsync(x => x.Id == idDto.Id);
         if (todoItem == null)
         {
             throw new NotFoundException();
         }
 
-        var author = await _context.Authors.FindAsync(authorId);
-        if (author == null)
-        {
-            throw new NotFoundException();
-        }
+        var authors = await _context
+            .Authors.Where(a => authorIdDtos.Select(x => x.Id).Contains(a.Id))
+            .ToListAsync();
 
-        todoItem.Authors.Remove(author);
+        foreach (var author in authors)
+        {
+            todoItem.Authors.Remove(author);
+        }
         await _context.SaveChangesAsync();
+    }
+
+    private bool TodoItemExists(TodoItemIdDto idDto)
+    {
+        return _context.TodoItems.Any(e => e.Id == idDto.Id);
     }
 }

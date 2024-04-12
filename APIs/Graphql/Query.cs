@@ -40,7 +40,8 @@ public class GqlQuery : ObjectGraphType<object>
             .WithScope()
             .WithService<ITodoItemsService>()
             .ResolveAsync(
-                async (context, service) => await service.TodoItem(context.GetArgument<int>("id"))
+                async (context, service) =>
+                    await service.TodoItem(context.GetArgument<TodoItemIdDto>("id"))
             );
 
         Field<ListGraphType<AutoRegisteringObjectGraphType<WorkspaceDto>>>("workspaces")
