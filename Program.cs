@@ -73,7 +73,12 @@ app.MapGraphQLVoyager();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseStaticFiles();
+
+    app.UseSwaggerUI(options =>
+    {
+        options.InjectStylesheet("/swagger-ui/swagger.css");
+    });
 }
 
 app.UseHttpsRedirection();
