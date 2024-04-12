@@ -18,15 +18,16 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
         _context = context;
     }
 
-    public async Task<IEnumerable<TodoItemDto>> TodoItems()
+    public async Task<IEnumerable<TodoItemDto>> TodoItems(TodoItemFindMany findManyArgs)
     {
-        var todos = await _context.TodoItems.ToListAsync();
-        return todos.ConvertAll(todo => new TodoItemDto
-        {
-            Id = todo.Id,
-            Name = todo.Name,
-            IsComplete = todo.IsComplete
-        });
+        var todos = await _context
+            .TodoItems.Include(x => x.Authors)
+            .ApplyWhere(findManyArgs.Where)
+            .ApplySkip(findManyArgs.Skip)
+            .ApplyTake(findManyArgs.Take)
+            .ApplyOrderBy(findManyArgs.SortBy)
+            .ToListAsync();
+        return todos.ConvertAll(todo => todo.ToDto());
     }
 
     public async Task<TodoItemDto> TodoItem(TodoItemIdDto idDto)

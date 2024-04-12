@@ -6,7 +6,7 @@ namespace MyService.APIs;
 
 public interface ITodoItemsService
 {
-    public Task<IEnumerable<TodoItemDto>> TodoItems();
+    public Task<IEnumerable<TodoItemDto>> TodoItems(TodoItemFindMany findManyArgs);
 
     public Task<TodoItemDto> TodoItem(TodoItemIdDto idDto);
 

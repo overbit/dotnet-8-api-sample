@@ -18,9 +18,11 @@ public abstract class TodoItemsControllerBase : ControllerBase
 
     // GET: api/TodoItems
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TodoItemDto>>> TodoItems()
+    public async Task<ActionResult<IEnumerable<TodoItemDto>>> TodoItems(
+        [FromQuery] TodoItemFindMany findManyDto
+    )
     {
-        return Ok(await _service.TodoItems());
+        return Ok(await _service.TodoItems(findManyDto));
     }
 
     // GET: api/TodoItems/5

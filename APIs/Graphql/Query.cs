@@ -33,7 +33,7 @@ public class GqlQuery : ObjectGraphType<object>
             .Resolve()
             .WithScope()
             .WithService<ITodoItemsService>()
-            .ResolveAsync(async (context, service) => await service.TodoItems());
+            .ResolveAsync(async (context, service) => await service.TodoItems(null));
 
         Field<AutoRegisteringObjectGraphType<TodoItemDto>>("todoItem")
             .Resolve()
