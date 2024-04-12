@@ -48,14 +48,15 @@ public class GqlQuery : ObjectGraphType<object>
             .Resolve()
             .WithScope()
             .WithService<IWorkspacesService>()
-            .ResolveAsync(async (context, service) => await service.Workspaces());
+            .ResolveAsync(async (context, service) => await service.Workspaces(null));
 
         Field<AutoRegisteringObjectGraphType<WorkspaceDto>>("workspace")
             .Resolve()
             .WithScope()
             .WithService<IWorkspacesService>()
             .ResolveAsync(
-                async (context, service) => await service.Workspace(context.GetArgument<int>("id"))
+                async (context, service) =>
+                    await service.Workspace(context.GetArgument<WorkspaceIdDto>("id"))
             );
     }
 }

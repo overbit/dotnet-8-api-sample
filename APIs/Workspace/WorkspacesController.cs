@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
+namespace MyService.APIs;
+
 [ApiController]
 public class WorkspacesController : WorkspacesControllerBase
 {

@@ -1,7 +1,8 @@
 namespace MyService.APIs.Dtos;
 
-public class WorkspaceDto
+public class WorkspaceDto : WorkspaceIdDto
 {
-    public long Id { get; set; }
     public string? Name { get; set; }
+
+    public IEnumerable<TodoItemIdDto>? TodoItemIds { get; set; }
 }

@@ -1,13 +1,26 @@
+using System.ComponentModel.DataAnnotations;
 using MyService.APIs.Dtos;
+
+namespace MyService.APIs;
 
 public interface IWorkspacesService
 {
-    public Task<IEnumerable<WorkspaceDto>> Workspaces();
+    public Task<IEnumerable<WorkspaceDto>> Workspaces(WorkspaceFindMany findManyArgs);
 
-    public Task<WorkspaceDto> Workspace(long id);
+    public Task<WorkspaceDto> Workspace(WorkspaceIdDto idDto);
 
-    public Task UpdateWorkspace(long id, WorkspaceDto workspaceDto);
+    public Task UpdateWorkspace(WorkspaceIdDto idDto, WorkspaceUpdateInput updateInput);
 
-    public Task<WorkspaceDto> CreateWorkspace(WorkspaceDto workspaceDto);
-    public Task DeleteWorkspace(long id);
+    public Task<WorkspaceDto> CreateWorkspace(WorkspaceCreateInput authorDto);
+
+    public Task DeleteWorkspace(WorkspaceIdDto idDto);
+
+    public Task<IEnumerable<TodoItemDto>> TodoItems(
+        WorkspaceIdDto idDto,
+        TodoItemFindMany todoItemFindMany
+    );
+
+    public Task ConnectTodoItems(WorkspaceIdDto idDto, TodoItemIdDto[] todoItemsId);
+
+    public Task DisconnectTodoItems(WorkspaceIdDto idDto, TodoItemIdDto[] todoItemsId);
 }

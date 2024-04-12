@@ -1,9 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
+using MyService.APIs.Extensions;
 using MyService.Infrastructure;
+using MyService.Infrastructure.Models;
+using NuGet.Packaging;
 
-public class WorkspacesServiceBase : IWorkspacesService
+namespace MyService.APIs;
+
+public abstract class WorkspacesServiceBase : IWorkspacesService
 {
     protected readonly MyServiceContext _context;
 
@@ -12,28 +17,43 @@ public class WorkspacesServiceBase : IWorkspacesService
         _context = context;
     }
 
-    public async Task<IEnumerable<WorkspaceDto>> Workspaces()
+    public async Task<IEnumerable<WorkspaceDto>> Workspaces(WorkspaceFindMany findManyArgs)
     {
-        var workspaces = await _context.Workspaces.ToListAsync();
+        var workspaces = await _context
+            .Workspaces.Include(x => x.TodoItems)
+            .ApplyWhere(findManyArgs.Where)
+            .ApplySkip(findManyArgs.Skip)
+            .ApplyTake(findManyArgs.Take)
+            .ApplyOrderBy(findManyArgs.SortBy)
+            .ToListAsync();
 
-        return workspaces.ConvertAll(w => new WorkspaceDto { Id = w.Id, Name = w.Name });
+        return workspaces.ConvertAll(workspace => workspace.ToDto());
     }
 
-    public async Task<WorkspaceDto> Workspace(long id)
+    public async Task<WorkspaceDto> Workspace(WorkspaceIdDto idDto)
     {
-        var workspace = await _context.Workspaces.FindAsync(id);
+        var workspace = await _context.Workspaces.FindAsync(idDto.Id);
 
         if (workspace == null)
         {
             throw new NotFoundException();
         }
 
-        return new WorkspaceDto { Id = workspace.Id, Name = workspace.Name };
+        return workspace.ToDto();
     }
 
-    public async Task UpdateWorkspace(long id, WorkspaceDto workspaceDto)
+    public async Task UpdateWorkspace(WorkspaceIdDto idDto, WorkspaceUpdateInput updateDto)
     {
-        _context.Entry(workspaceDto).State = EntityState.Modified;
+        var workspace = updateDto.ToModel(idDto);
+
+        if (updateDto.TodoItemIds != null)
+        {
+            workspace.TodoItems = await _context
+                .TodoItems.Where(todo => updateDto.TodoItemIds.Select(t => t.Id).Contains(todo.Id))
+                .ToListAsync();
+        }
+
+        _context.Entry(workspace).State = EntityState.Modified;
 
         try
         {
@@ -41,7 +61,7 @@ public class WorkspacesServiceBase : IWorkspacesService
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!WorkspaceExists(id))
+            if (!WorkspaceExists(idDto))
             {
                 throw new NotFoundException();
             }
@@ -52,33 +72,108 @@ public class WorkspacesServiceBase : IWorkspacesService
         }
     }
 
-    public async Task<WorkspaceDto> CreateWorkspace(WorkspaceDto workspaceDto)
+    public async Task<WorkspaceDto> CreateWorkspace(WorkspaceCreateInput createDto)
     {
-        var workspace = new MyService.Infrastructure.Models.Workspace()
+        var model = new Workspace { Name = createDto.Name, };
+        if (createDto.Id != null)
         {
-            Name = workspaceDto.Name,
-            Id = workspaceDto.Id
-        };
-        _context.Workspaces.Add(workspace);
+            model.Id = createDto.Id.Value;
+        }
+
+        if (createDto.TodoItemIds != null)
+        {
+            model.TodoItems = await _context
+                .TodoItems.Where(todo => createDto.TodoItemIds.Select(t => t.Id).Contains(todo.Id))
+                .ToListAsync();
+        }
+
+        _context.Workspaces.Add(model);
         await _context.SaveChangesAsync();
 
-        return workspaceDto;
-    }
+        var result = await _context.FindAsync<Workspace>(model.Id);
 
-    public async Task DeleteWorkspace(long id)
-    {
-        var workspaceDto = await _context.Workspaces.FindAsync(id);
-        if (workspaceDto == null)
+        if (result == null)
         {
             throw new NotFoundException();
         }
 
-        _context.Workspaces.Remove(workspaceDto);
+        return result.ToDto();
+    }
+
+    public async Task DeleteWorkspace(WorkspaceIdDto idDto)
+    {
+        var workspace = await _context.Workspaces.FindAsync(idDto.Id);
+        if (workspace == null)
+        {
+            throw new NotFoundException();
+        }
+
+        _context.Workspaces.Remove(workspace);
         await _context.SaveChangesAsync();
     }
 
-    private bool WorkspaceExists(long id)
+    public async Task<IEnumerable<TodoItemDto>> TodoItems(
+        WorkspaceIdDto idDto,
+        TodoItemFindMany todoItemFindMany
+    )
     {
-        return _context.Workspaces.Any(e => e.Id == id);
+        var workspace = await _context.Workspaces.FirstAsync(x => x.Id == idDto.Id);
+
+        if (workspace == null)
+        {
+            throw new NotFoundException();
+        }
+
+        return workspace.TodoItems.Select(todo => todo.ToDto()).ToList();
+    }
+
+    public async Task ConnectTodoItems(WorkspaceIdDto idDto, TodoItemIdDto[] todoItemsId)
+    {
+        var workspace = await _context
+            .Workspaces.Include(x => x.TodoItems)
+            .FirstOrDefaultAsync(x => x.Id == idDto.Id);
+        if (workspace == null)
+        {
+            throw new NotFoundException();
+        }
+
+        var todoItems = await _context
+            .TodoItems.Where(t => todoItemsId.Select(x => x.Id).Contains(t.Id))
+            .ToListAsync();
+        if (todoItems.Count == 0)
+        {
+            throw new NotFoundException();
+        }
+
+        var newTodoItems = todoItems.Except(workspace.TodoItems);
+        workspace.TodoItems.AddRange(newTodoItems);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DisconnectTodoItems(WorkspaceIdDto idDto, TodoItemIdDto[] todoItemsId)
+    {
+        var workspace = await _context
+            .Workspaces.Include(x => x.TodoItems)
+            .FirstOrDefaultAsync(x => x.Id == idDto.Id);
+
+        if (workspace == null)
+        {
+            throw new NotFoundException();
+        }
+
+        var todoItems = await _context
+            .TodoItems.Where(t => todoItemsId.Select(x => x.Id).Contains(t.Id))
+            .ToListAsync();
+
+        foreach (var todoItem in todoItems)
+        {
+            workspace.TodoItems.Remove(todoItem);
+        }
+        await _context.SaveChangesAsync();
+    }
+
+    private bool WorkspaceExists(WorkspaceIdDto idDto)
+    {
+        return _context.Workspaces.Any(e => e.Id == idDto.Id);
     }
 }

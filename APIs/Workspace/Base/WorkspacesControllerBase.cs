@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
 
+namespace MyService.APIs;
+
 [Route("api/[controller]")]
 [ApiController]
 public abstract class WorkspacesControllerBase : ControllerBase
@@ -13,35 +15,40 @@ public abstract class WorkspacesControllerBase : ControllerBase
         _service = service;
     }
 
-    // GET: api/Workspaces
+    // GET: api/author
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<WorkspaceDto>>> Workspaces()
+    public async Task<ActionResult<IEnumerable<WorkspaceDto>>> Workspaces(
+        [FromQuery] WorkspaceFindMany filter
+    )
     {
-        var workspaces = await _service.Workspaces();
-
-        return Ok(workspaces);
+        return Ok(await _service.Workspaces(filter));
     }
 
-    // GET: api/Workspaces/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<WorkspaceDto>> Workspace(long id)
+    // GET: api/author/5
+    [HttpGet("{Id}")]
+    public async Task<ActionResult<WorkspaceDto>> Workspace([FromRoute] WorkspaceIdDto idDto)
     {
-        return await _service.Workspace(id);
-    }
-
-    // PUT: api/Workspaces/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> UpdateWorkspace(long id, WorkspaceDto workspaceDto)
-    {
-        if (id != workspaceDto.Id)
-        {
-            return BadRequest();
-        }
-
         try
         {
-            await _service.UpdateWorkspace(id, workspaceDto);
+            return await _service.Workspace(idDto);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
+    // PATCH: api/author/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPatch("{Id}")]
+    public async Task<IActionResult> UpdateWorkspace(
+        [FromRoute] WorkspaceIdDto idDto,
+        [FromQuery] WorkspaceUpdateInput authorUpdateDto
+    )
+    {
+        try
+        {
+            await _service.UpdateWorkspace(idDto, authorUpdateDto);
         }
         catch (NotFoundException)
         {
@@ -51,23 +58,85 @@ public abstract class WorkspacesControllerBase : ControllerBase
         return NoContent();
     }
 
-    // POST: api/Workspaces
+    // POST: api/author
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<WorkspaceDto>> PostWorkspace(WorkspaceDto workspaceDto)
+    public async Task<ActionResult<WorkspaceDto>> CreateWorkspace(WorkspaceCreateInput input)
     {
-        var dto = await _service.CreateWorkspace(workspaceDto);
+        var author = await _service.CreateWorkspace(input);
 
-        return CreatedAtAction(nameof(Workspace), new { id = dto.Id }, dto);
+        return CreatedAtAction(nameof(Workspace), new { id = author.Id }, author);
     }
 
-    // DELETE: api/Workspaces/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteWorkspace(long id)
+    // DELETE: api/author/5
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> DeleteTodoItem([FromRoute] WorkspaceIdDto idDto)
     {
         try
         {
-            await _service.DeleteWorkspace(id);
+            await _service.DeleteWorkspace(idDto);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Get all TodoItems of an Workspace
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("{Id}/todoItems")]
+    public async Task<IActionResult> TodoItems(
+        [FromRoute] WorkspaceIdDto idDto,
+        [FromQuery] TodoItemFindMany filter
+    )
+    {
+        try
+        {
+            return Ok(await _service.TodoItems(idDto, filter));
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
+    /// <summary>
+    /// Connect a TodoItem to an Workspace
+    /// </summary>
+    [HttpPost("{Id}/todoItems")]
+    public async Task<IActionResult> ConnectTodoItem(
+        [FromRoute] WorkspaceIdDto idDto,
+        [FromBody] TodoItemIdDto[] todoItemIds
+    )
+    {
+        try
+        {
+            await _service.ConnectTodoItems(idDto, todoItemIds);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Disconnect a TodoItem from an Workspace
+    /// </summary>
+    [HttpDelete("{Id}/todoItems")]
+    public async Task<IActionResult> DisconnectTodoItem(
+        [FromRoute] WorkspaceIdDto idDto,
+        [FromBody] TodoItemIdDto[] todoItemIds
+    )
+    {
+        try
+        {
+            await _service.DisconnectTodoItems(idDto, todoItemIds);
         }
         catch (NotFoundException)
         {
