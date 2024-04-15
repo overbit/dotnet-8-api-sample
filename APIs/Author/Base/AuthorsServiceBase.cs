@@ -32,14 +32,16 @@ public abstract class AuthorsServiceBase : IAuthorsService
 
     public async Task<AuthorDto> Author(AuthorIdDto idDto)
     {
-        var author = await _context.Authors.FindAsync(idDto.Id);
-
+        var authors = await this.Authors(
+            new AuthorFindMany { Where = new AuthorWhereInput { Id = idDto.Id } }
+        );
+        var author = authors.FirstOrDefault();
         if (author == null)
         {
             throw new NotFoundException();
         }
 
-        return author.ToDto();
+        return author;
     }
 
     public async Task UpdateAuthor(AuthorIdDto idDto, AuthorUpdateInput updateDto)
@@ -117,7 +119,9 @@ public abstract class AuthorsServiceBase : IAuthorsService
         TodoItemFindMany todoItemFindMany
     )
     {
-        var author = await _context.Authors.FirstAsync(x => x.Id == idDto.Id);
+        var author = await _context
+            .Authors.Include(a => a.TodoItems)
+            .FirstAsync(x => x.Id == idDto.Id);
 
         if (author == null)
         {
@@ -147,6 +151,28 @@ public abstract class AuthorsServiceBase : IAuthorsService
 
         var newTodoItems = todoItems.Except(author.TodoItems);
         author.TodoItems.AddRange(newTodoItems);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateTodoItems(AuthorIdDto idDto, TodoItemIdDto[] todoItemsId)
+    {
+        var author = await _context
+            .Authors.Include(x => x.TodoItems)
+            .FirstOrDefaultAsync(x => x.Id == idDto.Id);
+        if (author == null)
+        {
+            throw new NotFoundException();
+        }
+
+        var todoItems = await _context
+            .TodoItems.Where(t => todoItemsId.Select(x => x.Id).Contains(t.Id))
+            .ToListAsync();
+        if (todoItems.Count == 0)
+        {
+            throw new NotFoundException();
+        }
+
+        author.TodoItems = todoItems;
         await _context.SaveChangesAsync();
     }
 

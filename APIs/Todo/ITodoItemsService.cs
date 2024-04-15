@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.CodeAnalysis.Elfie.Model.Structures;
 using MyService.APIs.Dtos;
 
 namespace MyService.APIs;
@@ -19,6 +17,8 @@ public interface ITodoItemsService
     public Task<IEnumerable<AuthorDto>> Authors(TodoItemIdDto idDto, AuthorFindMany authorFindMany);
 
     public Task ConnectAuthors(TodoItemIdDto idDto, AuthorIdDto[] todoItemsId);
+
+    public Task UpdateAuthors(TodoItemIdDto idDto, AuthorIdDto[] todoItemsId);
 
     public Task DisconnectAuthors(TodoItemIdDto idDto, AuthorIdDto[] todoItemsId);
 }

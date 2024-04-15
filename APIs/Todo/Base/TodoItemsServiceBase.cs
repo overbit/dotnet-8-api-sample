@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
@@ -143,6 +142,30 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
         var newAuthors = authors.Except(todoItem.Authors);
 
         todoItem.Authors.AddRange(newAuthors);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAuthors(TodoItemIdDto idDto, AuthorIdDto[] authorIdDtos)
+    {
+        var todoItem = await _context
+            .TodoItems.Include(t => t.Authors)
+            .FirstOrDefaultAsync(x => x.Id == idDto.Id);
+
+        if (todoItem == null)
+        {
+            throw new NotFoundException();
+        }
+
+        var authors = await _context
+            .Authors.Where(a => authorIdDtos.Select(x => x.Id).Contains(a.Id))
+            .ToListAsync();
+
+        if (authors.Count == 0)
+        {
+            throw new NotFoundException();
+        }
+
+        todoItem.Authors = authors;
         await _context.SaveChangesAsync();
     }
 

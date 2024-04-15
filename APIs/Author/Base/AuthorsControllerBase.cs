@@ -105,10 +105,10 @@ public abstract class AuthorsControllerBase : ControllerBase
     }
 
     /// <summary>
-    /// Connect a TodoItem to an Author
+    /// Connect TodoItems to an Author
     /// </summary>
     [HttpPost("{Id}/todoItems")]
-    public async Task<IActionResult> ConnectTodoItem(
+    public async Task<IActionResult> ConnectTodoItems(
         [FromRoute] AuthorIdDto idDto,
         [FromBody] TodoItemIdDto[] todoItemIds
     )
@@ -126,10 +126,31 @@ public abstract class AuthorsControllerBase : ControllerBase
     }
 
     /// <summary>
-    /// Disconnect a TodoItem from an Author
+    /// Update all TodoItems of an Author
+    /// </summary>
+    [HttpPatch("{Id}/todoItems")]
+    public async Task<IActionResult> UpdateTodoItems(
+        [FromRoute] AuthorIdDto idDto,
+        [FromBody] TodoItemIdDto[] todoItemIds
+    )
+    {
+        try
+        {
+            await _service.UpdateTodoItems(idDto, todoItemIds);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Disconnect TodoItems from an Author
     /// </summary>
     [HttpDelete("{Id}/todoItems")]
-    public async Task<IActionResult> DisconnectTodoItem(
+    public async Task<IActionResult> DisconnectTodoItems(
         [FromRoute] AuthorIdDto idDto,
         [FromBody] TodoItemIdDto[] todoItemIds
     )

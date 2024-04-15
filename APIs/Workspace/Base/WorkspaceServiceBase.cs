@@ -129,10 +129,10 @@ public abstract class WorkspacesServiceBase : IWorkspacesService
 
     public async Task ConnectTodoItems(WorkspaceIdDto idDto, TodoItemIdDto[] todoItemsId)
     {
-        var workspace = await _context
+        var author = await _context
             .Workspaces.Include(x => x.TodoItems)
             .FirstOrDefaultAsync(x => x.Id == idDto.Id);
-        if (workspace == null)
+        if (author == null)
         {
             throw new NotFoundException();
         }
@@ -145,18 +145,40 @@ public abstract class WorkspacesServiceBase : IWorkspacesService
             throw new NotFoundException();
         }
 
-        var newTodoItems = todoItems.Except(workspace.TodoItems);
-        workspace.TodoItems.AddRange(newTodoItems);
+        var newTodoItems = todoItems.Except(author.TodoItems);
+        author.TodoItems.AddRange(newTodoItems);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateTodoItems(WorkspaceIdDto idDto, TodoItemIdDto[] todoItemsId)
+    {
+        var author = await _context
+            .Workspaces.Include(x => x.TodoItems)
+            .FirstOrDefaultAsync(x => x.Id == idDto.Id);
+        if (author == null)
+        {
+            throw new NotFoundException();
+        }
+
+        var todoItems = await _context
+            .TodoItems.Where(t => todoItemsId.Select(x => x.Id).Contains(t.Id))
+            .ToListAsync();
+        if (todoItems.Count == 0)
+        {
+            throw new NotFoundException();
+        }
+
+        author.TodoItems = todoItems;
         await _context.SaveChangesAsync();
     }
 
     public async Task DisconnectTodoItems(WorkspaceIdDto idDto, TodoItemIdDto[] todoItemsId)
     {
-        var workspace = await _context
+        var author = await _context
             .Workspaces.Include(x => x.TodoItems)
             .FirstOrDefaultAsync(x => x.Id == idDto.Id);
 
-        if (workspace == null)
+        if (author == null)
         {
             throw new NotFoundException();
         }
@@ -167,7 +189,7 @@ public abstract class WorkspacesServiceBase : IWorkspacesService
 
         foreach (var todoItem in todoItems)
         {
-            workspace.TodoItems.Remove(todoItem);
+            author.TodoItems.Remove(todoItem);
         }
         await _context.SaveChangesAsync();
     }

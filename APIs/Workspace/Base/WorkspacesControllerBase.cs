@@ -105,10 +105,10 @@ public abstract class WorkspacesControllerBase : ControllerBase
     }
 
     /// <summary>
-    /// Connect a TodoItem to an Workspace
+    /// Connect TodoItems to an Workspace
     /// </summary>
     [HttpPost("{Id}/todoItems")]
-    public async Task<IActionResult> ConnectTodoItem(
+    public async Task<IActionResult> ConnectTodoItems(
         [FromRoute] WorkspaceIdDto idDto,
         [FromBody] TodoItemIdDto[] todoItemIds
     )
@@ -126,10 +126,31 @@ public abstract class WorkspacesControllerBase : ControllerBase
     }
 
     /// <summary>
-    /// Disconnect a TodoItem from an Workspace
+    /// Update all TodoItems of an Workspace
+    /// </summary>
+    [HttpPatch("{Id}/todoItems")]
+    public async Task<IActionResult> UpdateTodoItems(
+        [FromRoute] WorkspaceIdDto idDto,
+        [FromBody] TodoItemIdDto[] todoItemIds
+    )
+    {
+        try
+        {
+            await _service.UpdateTodoItems(idDto, todoItemIds);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Disconnect TodoItems from an Workspace
     /// </summary>
     [HttpDelete("{Id}/todoItems")]
-    public async Task<IActionResult> DisconnectTodoItem(
+    public async Task<IActionResult> DisconnectTodoItems(
         [FromRoute] WorkspaceIdDto idDto,
         [FromBody] TodoItemIdDto[] todoItemIds
     )

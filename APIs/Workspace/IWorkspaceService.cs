@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using MyService.APIs.Dtos;
 
 namespace MyService.APIs;
@@ -21,6 +20,8 @@ public interface IWorkspacesService
     );
 
     public Task ConnectTodoItems(WorkspaceIdDto idDto, TodoItemIdDto[] todoItemsId);
+
+    public Task UpdateTodoItems(WorkspaceIdDto idDto, TodoItemIdDto[] todoItemsId);
 
     public Task DisconnectTodoItems(WorkspaceIdDto idDto, TodoItemIdDto[] todoItemsId);
 }

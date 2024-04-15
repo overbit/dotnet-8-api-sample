@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
@@ -95,7 +94,7 @@ public abstract class TodoItemsControllerBase : ControllerBase
     }
 
     [HttpPost("{Id}/authors")]
-    public async Task<IActionResult> ConnectAuthor(
+    public async Task<IActionResult> ConnectAuthors(
         [FromRoute] TodoItemIdDto idDto,
         [FromBody] AuthorIdDto[] authorIds
     )
@@ -103,6 +102,23 @@ public abstract class TodoItemsControllerBase : ControllerBase
         try
         {
             await _service.ConnectAuthors(idDto, authorIds);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+        return NoContent();
+    }
+
+    [HttpPatch("{Id}/authors")]
+    public async Task<IActionResult> UpdateAuthors(
+        [FromRoute] TodoItemIdDto idDto,
+        [FromBody] AuthorIdDto[] authorIds
+    )
+    {
+        try
+        {
+            await _service.UpdateAuthors(idDto, authorIds);
         }
         catch (NotFoundException)
         {
