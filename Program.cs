@@ -1,10 +1,7 @@
 using System.Reflection;
 using GraphQL;
-using GraphQL.MicrosoftDI;
-using GraphQL.Types;
 using Microsoft.EntityFrameworkCore;
-using MyService.APIs;
-using MyService.APIs.Graphql;
+using MyService;
 using MyService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,25 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
-// Add services to the container.
-builder.Services.AddScoped<IAuthorsService, AuthorsService>();
-builder.Services.AddScoped<ITodoItemsService, TodoItemsService>();
-builder.Services.AddScoped<IWorkspacesService, WorkspacesService>();
-
-// Add graphql services to the container.
-builder.Services.AddSingleton<ISchema, GqlSchema>(services => new GqlSchema(
-    new SelfActivatingServiceProvider(services)
-));
-builder.Services.AddSingleton(typeof(AutoRegisteringInputObjectGraphType<>));
-builder.Services.AddSingleton(typeof(AutoRegisteringObjectGraphType<>));
-builder.Services.AddSingleton(typeof(EnumerationGraphType<>));
-
-builder.Services.AddGraphQL(b =>
-    b.AddSystemTextJson()
-        .AddDataLoader()
-        .AddAutoSchema<GqlSchema>()
-        .AddErrorInfoProvider(opt => opt.ExposeExceptionDetails = true)
-);
+builder.Services.RegisterServices();
+builder.Services.RegisterGraphQL();
 
 // Add a DbContext to the container
 builder.Services.AddDbContext<MyServiceContext>(opt =>
@@ -65,9 +45,7 @@ builder.Services.AddCors(builder =>
 var app = builder.Build();
 
 app.UseCors();
-app.MapGraphQL("/graphql").RequireCors("MyCorsPolicy");
-app.MapGraphQLPlayground("/graphql/ui");
-app.MapGraphQLVoyager();
+app.MapGraphQLEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
