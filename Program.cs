@@ -1,8 +1,11 @@
 using System.Reflection;
 using GraphQL;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using MyService;
 using MyService.Infrastructure;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,8 @@ builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true
 
 builder.Services.RegisterServices();
 builder.Services.RegisterGraphQL();
+
+builder.Services.AddApiAuthentication();
 
 // Add a DbContext to the container
 builder.Services.AddDbContext<MyServiceContext>(opt =>
@@ -22,6 +27,7 @@ builder.Services.AddDbContext<MyServiceContext>(opt =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.UseApiAuthentication();
     // using System.Reflection;
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
@@ -44,6 +50,7 @@ builder.Services.AddCors(builder =>
 
 var app = builder.Build();
 
+app.UseApiAuthentication();
 app.UseCors();
 app.MapGraphQLEndpoints();
 
@@ -60,8 +67,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 app.Run();

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
@@ -16,6 +17,7 @@ public abstract class WorkspacesControllerBase : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<WorkspaceDto>>> Workspaces(
         [FromQuery] WorkspaceFindMany filter
     )
