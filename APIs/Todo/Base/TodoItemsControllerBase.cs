@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
@@ -16,6 +17,7 @@ public abstract class TodoItemsControllerBase : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "admin,user")]
     public async Task<ActionResult<IEnumerable<TodoItemDto>>> TodoItems(
         [FromQuery] TodoItemFindMany findManyDto
     )
@@ -24,6 +26,7 @@ public abstract class TodoItemsControllerBase : ControllerBase
     }
 
     [HttpGet("{Id}")]
+    [Authorize(Roles = "admin,user")]
     public async Task<ActionResult<TodoItemDto>> TodoItem([FromRoute] TodoItemIdDto idDto)
     {
         try
@@ -39,6 +42,7 @@ public abstract class TodoItemsControllerBase : ControllerBase
     // PUT: api/TodoItems/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPatch("{Id}")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> UpdateTodoItem(
         [FromRoute] TodoItemIdDto idDto,
         [FromBody] TodoItemUpdateInput updateDto
@@ -58,6 +62,7 @@ public abstract class TodoItemsControllerBase : ControllerBase
 
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
+    [Authorize(Roles = "admin,user")]
     public async Task<ActionResult<TodoItemDto>> CreateTodoItem(TodoItemCreateInput input)
     {
         var dto = await _service.CreateTodoItem(input);
@@ -65,6 +70,7 @@ public abstract class TodoItemsControllerBase : ControllerBase
     }
 
     [HttpDelete("{Id}")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> DeleteTodoItem([FromRoute] TodoItemIdDto idDto)
     {
         try
@@ -80,6 +86,7 @@ public abstract class TodoItemsControllerBase : ControllerBase
     }
 
     [HttpGet("{Id}/authors")]
+    [Authorize(Roles = "admin,user")]
     public async Task<ActionResult<IEnumerable<AuthorDto>>> Authors(
         [FromRoute] TodoItemIdDto idDto,
         [FromQuery] AuthorFindMany filter
@@ -90,6 +97,7 @@ public abstract class TodoItemsControllerBase : ControllerBase
     }
 
     [HttpPost("{Id}/authors")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> ConnectAuthors(
         [FromRoute] TodoItemIdDto idDto,
         [FromBody] AuthorIdDto[] authorIds
@@ -107,6 +115,7 @@ public abstract class TodoItemsControllerBase : ControllerBase
     }
 
     [HttpPatch("{Id}/authors")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> UpdateAuthors(
         [FromRoute] TodoItemIdDto idDto,
         [FromBody] AuthorIdDto[] authorIds
@@ -124,6 +133,7 @@ public abstract class TodoItemsControllerBase : ControllerBase
     }
 
     [HttpDelete("{Id}/authors")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> DisconnectAuthors(
         [FromRoute] TodoItemIdDto idDto,
         [FromBody] AuthorIdDto[] authorIds
