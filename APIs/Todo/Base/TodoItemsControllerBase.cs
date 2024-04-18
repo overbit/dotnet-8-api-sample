@@ -15,16 +15,14 @@ public abstract class TodoItemsControllerBase : ControllerBase
         _service = service;
     }
 
-    // GET: api/TodoItems
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TodoItemDto>>> TodoItems(
-        [FromQuery] TodoItemFindMany findManyDto
-    )
+    [FromQuery] TodoItemFindMany findManyDto
+)
     {
         return Ok(await _service.TodoItems(findManyDto));
     }
 
-    // GET: api/TodoItems/5
     [HttpGet("{Id}")]
     public async Task<ActionResult<TodoItemDto>> TodoItem([FromRoute] TodoItemIdDto idDto)
     {
@@ -58,7 +56,6 @@ public abstract class TodoItemsControllerBase : ControllerBase
         return NoContent();
     }
 
-    // POST: api/TodoItems
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<TodoItemDto>> CreateTodoItem(TodoItemCreateInput input)
@@ -67,7 +64,6 @@ public abstract class TodoItemsControllerBase : ControllerBase
         return CreatedAtAction(nameof(TodoItem), new { id = dto.Id }, dto);
     }
 
-    // DELETE: api/TodoItems/5
     [HttpDelete("{Id}")]
     public async Task<IActionResult> DeleteTodoItem([FromRoute] TodoItemIdDto idDto)
     {

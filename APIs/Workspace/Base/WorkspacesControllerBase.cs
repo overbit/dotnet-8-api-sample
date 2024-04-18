@@ -15,16 +15,14 @@ public abstract class WorkspacesControllerBase : ControllerBase
         _service = service;
     }
 
-    // GET: api/author
     [HttpGet]
     public async Task<ActionResult<IEnumerable<WorkspaceDto>>> Workspaces(
-        [FromQuery] WorkspaceFindMany filter
-    )
+    [FromQuery] WorkspaceFindMany filter
+)
     {
         return Ok(await _service.Workspaces(filter));
     }
 
-    // GET: api/author/5
     [HttpGet("{Id}")]
     public async Task<ActionResult<WorkspaceDto>> Workspace([FromRoute] WorkspaceIdDto idDto)
     {
@@ -38,7 +36,6 @@ public abstract class WorkspacesControllerBase : ControllerBase
         }
     }
 
-    // PATCH: api/author/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPatch("{Id}")]
     public async Task<IActionResult> UpdateWorkspace(
@@ -58,7 +55,6 @@ public abstract class WorkspacesControllerBase : ControllerBase
         return NoContent();
     }
 
-    // POST: api/author
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<WorkspaceDto>> CreateWorkspace(WorkspaceCreateInput input)
@@ -68,7 +64,6 @@ public abstract class WorkspacesControllerBase : ControllerBase
         return CreatedAtAction(nameof(Workspace), new { id = author.Id }, author);
     }
 
-    // DELETE: api/author/5
     [HttpDelete("{Id}")]
     public async Task<IActionResult> DeleteTodoItem([FromRoute] WorkspaceIdDto idDto)
     {

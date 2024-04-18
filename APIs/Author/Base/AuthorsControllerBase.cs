@@ -15,16 +15,14 @@ public abstract class AuthorsControllerBase : ControllerBase
         _service = service;
     }
 
-    // GET: api/author
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AuthorDto>>> Authors(
-        [FromQuery] AuthorFindMany filter
-    )
+    [FromQuery] AuthorFindMany filter
+)
     {
         return Ok(await _service.Authors(filter));
     }
 
-    // GET: api/author/5
     [HttpGet("{Id}")]
     public async Task<ActionResult<AuthorDto>> Author([FromRoute] AuthorIdDto idDto)
     {
@@ -38,7 +36,6 @@ public abstract class AuthorsControllerBase : ControllerBase
         }
     }
 
-    // PATCH: api/author/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPatch("{Id}")]
     public async Task<IActionResult> UpdateAuthor(
@@ -58,7 +55,6 @@ public abstract class AuthorsControllerBase : ControllerBase
         return NoContent();
     }
 
-    // POST: api/author
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<AuthorDto>> CreateAuthor(AuthorCreateInput input)
@@ -68,7 +64,6 @@ public abstract class AuthorsControllerBase : ControllerBase
         return CreatedAtAction(nameof(Author), new { id = author.Id }, author);
     }
 
-    // DELETE: api/author/5
     [HttpDelete("{Id}")]
     public async Task<IActionResult> DeleteTodoItem([FromRoute] AuthorIdDto idDto)
     {
