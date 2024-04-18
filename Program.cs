@@ -2,6 +2,7 @@ using System.Reflection;
 using GraphQL;
 using Microsoft.EntityFrameworkCore;
 using MyService;
+using MyService.APIs;
 using MyService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true
 
 builder.Services.RegisterServices();
 builder.Services.RegisterGraphQL();
+builder.Services.AddApiAuthentication(builder.Configuration);
 
 // Add a DbContext to the container
 builder.Services.AddDbContext<MyServiceContext>(opt =>
@@ -22,6 +24,7 @@ builder.Services.AddDbContext<MyServiceContext>(opt =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.UseOpenApiAuthentication();
     // using System.Reflection;
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
