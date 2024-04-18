@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Models;
 using MyService.Infrastructure;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace MyService;
+namespace MyService.APIs;
 
 public static class ProgramAuthExtensions
 {
@@ -20,7 +20,7 @@ public static class ProgramAuthExtensions
         app.UseAuthorization();
     }
 
-    public static void UseApiAuthentication(
+    public static void UseOpenApiAuthentication(
         this Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions options
     )
     {
