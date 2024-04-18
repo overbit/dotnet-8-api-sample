@@ -1,4 +1,4 @@
-namespace MyService.APIs;
+namespace MyService.APIs.Common;
 
 public abstract class PaginationInput
 {

@@ -1,6 +1,6 @@
 using System.Linq.Dynamic.Core;
 
-namespace MyService.APIs;
+namespace MyService.APIs.Common;
 
 public static class FindManyInputExtension
 {

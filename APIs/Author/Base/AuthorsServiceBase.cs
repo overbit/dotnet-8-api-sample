@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MyService.APIs.Common;
 using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
 using MyService.APIs.Extensions;
