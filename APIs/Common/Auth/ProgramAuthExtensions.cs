@@ -1,4 +1,5 @@
 using GraphQL;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Models;
 using MyService.Infrastructure;
@@ -11,7 +12,10 @@ public static class ProgramAuthExtensions
     public static void AddApiAuthentication(this IServiceCollection services)
     {
         services.AddAuthorization();
-        services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<MyServiceContext>();
+        services
+            .AddIdentityApiEndpoints<User>()
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<MyServiceContext>();
     }
 
     public static void UseApiAuthentication(this WebApplication app)
