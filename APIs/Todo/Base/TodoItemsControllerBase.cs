@@ -17,8 +17,8 @@ public abstract class TodoItemsControllerBase : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TodoItemDto>>> TodoItems(
-    [FromQuery] TodoItemFindMany findManyDto
-)
+        [FromQuery] TodoItemFindMany findManyDto
+    )
     {
         return Ok(await _service.TodoItems(findManyDto));
     }

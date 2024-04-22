@@ -17,8 +17,8 @@ public abstract class WorkspacesControllerBase : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<WorkspaceDto>>> Workspaces(
-    [FromQuery] WorkspaceFindMany filter
-)
+        [FromQuery] WorkspaceFindMany filter
+    )
     {
         return Ok(await _service.Workspaces(filter));
     }
