@@ -5,7 +5,7 @@ using MyService.APIs.Graphql;
 
 namespace MyService;
 
-public static class ProgramGraphQLExtensions
+public static class GraphQLExtensions
 {
     public static void RegisterGraphQL(this IServiceCollection services)
     {
