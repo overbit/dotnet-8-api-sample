@@ -68,6 +68,12 @@ if (app.Environment.IsDevelopment())
     {
         options.InjectStylesheet("/swagger-ui/swagger.css");
     });
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        await SeedDevelopmentData.SeedDevUser(services, app.Configuration);
+    }
 }
 
 app.UseHttpsRedirection();
