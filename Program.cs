@@ -48,6 +48,12 @@ builder.Services.AddCors(builder =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await RolesManager.SyncRoles(services, app.Configuration);
+}
+
 app.UseApiAuthentication();
 app.UseCors();
 app.MapGraphQLEndpoints();
