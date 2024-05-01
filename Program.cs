@@ -2,6 +2,7 @@ using System.Reflection;
 using GraphQL;
 using Microsoft.EntityFrameworkCore;
 using MyService;
+using MyService.APIs;
 using MyService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,8 @@ builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true
 
 builder.Services.RegisterServices();
 builder.Services.RegisterGraphQL();
+
+builder.Services.AddApiAuthentication();
 
 // Add a DbContext to the container
 builder.Services.AddDbContext<MyServiceContext>(opt =>
@@ -22,6 +25,7 @@ builder.Services.AddDbContext<MyServiceContext>(opt =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.UseOpenApiAuthentication();
     // using System.Reflection;
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
@@ -44,6 +48,13 @@ builder.Services.AddCors(builder =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await RolesManager.SyncRoles(services, app.Configuration);
+}
+
+app.UseApiAuthentication();
 app.UseCors();
 app.MapGraphQLEndpoints();
 
@@ -57,11 +68,15 @@ if (app.Environment.IsDevelopment())
     {
         options.InjectStylesheet("/swagger-ui/swagger.css");
     });
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        await SeedDevelopmentData.SeedDevUser(services, app.Configuration);
+    }
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 app.Run();

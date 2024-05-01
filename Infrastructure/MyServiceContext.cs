@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MyService.Infrastructure.Models;
 
 namespace MyService.Infrastructure;
 
-public class MyServiceContext : DbContext
+public class MyServiceContext : IdentityDbContext<User>
 {
     public MyServiceContext(DbContextOptions<MyServiceContext> options)
         : base(options) { }

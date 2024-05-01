@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyService.APIs.Dtos;
 using MyService.APIs.Errors;
@@ -16,6 +17,7 @@ public abstract class WorkspacesControllerBase : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "admin,user")]
     public async Task<ActionResult<IEnumerable<WorkspaceDto>>> Workspaces(
         [FromQuery] WorkspaceFindMany filter
     )
@@ -24,6 +26,7 @@ public abstract class WorkspacesControllerBase : ControllerBase
     }
 
     [HttpGet("{Id}")]
+    [Authorize(Roles = "admin,user")]
     public async Task<ActionResult<WorkspaceDto>> Workspace([FromRoute] WorkspaceIdDto idDto)
     {
         try
@@ -38,6 +41,7 @@ public abstract class WorkspacesControllerBase : ControllerBase
 
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPatch("{Id}")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> UpdateWorkspace(
         [FromRoute] WorkspaceIdDto idDto,
         [FromQuery] WorkspaceUpdateInput authorUpdateDto
@@ -57,6 +61,7 @@ public abstract class WorkspacesControllerBase : ControllerBase
 
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
+    [Authorize(Roles = "admin,user")]
     public async Task<ActionResult<WorkspaceDto>> CreateWorkspace(WorkspaceCreateInput input)
     {
         var author = await _service.CreateWorkspace(input);
@@ -65,6 +70,7 @@ public abstract class WorkspacesControllerBase : ControllerBase
     }
 
     [HttpDelete("{Id}")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> DeleteTodoItem([FromRoute] WorkspaceIdDto idDto)
     {
         try
@@ -84,6 +90,7 @@ public abstract class WorkspacesControllerBase : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet("{Id}/todoItems")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> TodoItems(
         [FromRoute] WorkspaceIdDto idDto,
         [FromQuery] TodoItemFindMany filter
@@ -103,6 +110,7 @@ public abstract class WorkspacesControllerBase : ControllerBase
     /// Connect TodoItems to an Workspace
     /// </summary>
     [HttpPost("{Id}/todoItems")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> ConnectTodoItems(
         [FromRoute] WorkspaceIdDto idDto,
         [FromBody] TodoItemIdDto[] todoItemIds
@@ -124,6 +132,7 @@ public abstract class WorkspacesControllerBase : ControllerBase
     /// Update all TodoItems of an Workspace
     /// </summary>
     [HttpPatch("{Id}/todoItems")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> UpdateTodoItems(
         [FromRoute] WorkspaceIdDto idDto,
         [FromBody] TodoItemIdDto[] todoItemIds
@@ -145,6 +154,7 @@ public abstract class WorkspacesControllerBase : ControllerBase
     /// Disconnect TodoItems from an Workspace
     /// </summary>
     [HttpDelete("{Id}/todoItems")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> DisconnectTodoItems(
         [FromRoute] WorkspaceIdDto idDto,
         [FromBody] TodoItemIdDto[] todoItemIds
