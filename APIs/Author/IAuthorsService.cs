@@ -14,7 +14,7 @@ public interface IAuthorsService
 
     public Task DeleteAuthor(AuthorIdDto idDto);
 
-    public Task<IEnumerable<TodoItemDto>> TodoItems(
+    public Task<IEnumerable<TodoItemDto>> FindTodoItems(
         AuthorIdDto idDto,
         TodoItemFindMany todoItemFindMany
     );

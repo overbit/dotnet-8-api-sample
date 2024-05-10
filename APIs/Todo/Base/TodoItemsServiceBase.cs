@@ -39,12 +39,7 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
             throw new NotFoundException();
         }
 
-        return new TodoItemDto
-        {
-            Id = todo.Id,
-            Name = todo.Name,
-            IsComplete = todo.IsComplete
-        };
+        return todo.ToDto();
     }
 
     public async Task UpdateTodoItem(TodoItemIdDto idDto, TodoItemUpdateInput updateDto)
@@ -132,7 +127,7 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
             .ApplyOrderBy(authorFindMany.SortBy)
             .ToListAsync();
 
-        return authors.Select(author => author.ToDto());
+        return authors.Select(x => x.ToDto());
     }
 
     public async Task ConnectAuthors(TodoItemIdDto idDto, AuthorIdDto[] authorIdDtos)

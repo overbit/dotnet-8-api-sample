@@ -115,21 +115,20 @@ public abstract class AuthorsServiceBase : IAuthorsService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<TodoItemDto>> TodoItems(
+    public async Task<IEnumerable<TodoItemDto>> FindTodoItems(
         AuthorIdDto idDto,
         TodoItemFindMany todoItemFindMany
     )
     {
-        var author = await _context
-            .Authors.Include(a => a.TodoItems)
-            .FirstAsync(x => x.Id == idDto.Id);
+        var todoItems = await _context
+            .TodoItems.Where(a => a.Authors.Any(t => t.Id == idDto.Id))
+            .ApplyWhere(todoItemFindMany.Where)
+            .ApplySkip(todoItemFindMany.Skip)
+            .ApplyTake(todoItemFindMany.Take)
+            .ApplyOrderBy(todoItemFindMany.SortBy)
+            .ToListAsync();
 
-        if (author == null)
-        {
-            throw new NotFoundException();
-        }
-
-        return author.TodoItems.Select(todo => todo.ToDto()).ToList();
+        return todoItems.Select(x => x.ToDto());
     }
 
     public async Task ConnectTodoItems(AuthorIdDto idDto, TodoItemIdDto[] todoItemsId)

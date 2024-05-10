@@ -14,7 +14,7 @@ public interface IWorkspacesService
 
     public Task DeleteWorkspace(WorkspaceIdDto idDto);
 
-    public Task<IEnumerable<TodoItemDto>> TodoItems(
+    public Task<IEnumerable<TodoItemDto>> FindTodoItems(
         WorkspaceIdDto idDto,
         TodoItemFindMany todoItemFindMany
     );
