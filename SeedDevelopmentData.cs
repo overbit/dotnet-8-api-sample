@@ -19,7 +19,7 @@ public class SeedDevelopmentData
             .GetSection("AmplicationRoles")
             .AsEnumerable()
             .Where(x => x.Value != null)
-            .Select(x => x.Value.ToString())
+            .Select(x => x.Value?.ToString())
             .ToArray();
 
         var user = new User
