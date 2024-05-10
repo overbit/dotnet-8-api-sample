@@ -119,20 +119,20 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
         return todoItem.Workspace.ToDto();
     }
 
-    public async Task<IEnumerable<AuthorDto>> Authors(
+    public async Task<IEnumerable<AuthorDto>> FindAuthors(
         TodoItemIdDto idDto,
         AuthorFindMany authorFindMany
     )
     {
-        var todoItem = await _context.TodoItems.FindAsync(idDto.Id);
-        if (todoItem == null)
-        {
-            throw new NotFoundException();
-        }
+        var authors = await _context
+            .Authors.Where(a => a.TodoItems.Any(t => t.Id == idDto.Id))
+            .ApplyWhere(authorFindMany.Where)
+            .ApplySkip(authorFindMany.Skip)
+            .ApplyTake(authorFindMany.Take)
+            .ApplyOrderBy(authorFindMany.SortBy)
+            .ToListAsync();
 
-        return todoItem
-            .Authors.Select(author => new AuthorDto { Id = author.Id, Name = author.Name })
-            .ToList();
+        return authors.Select(author => author.ToDto());
     }
 
     public async Task ConnectAuthors(TodoItemIdDto idDto, AuthorIdDto[] authorIdDtos)
