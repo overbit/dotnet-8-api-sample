@@ -104,6 +104,21 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
         await _context.SaveChangesAsync();
     }
 
+    public async Task<WorkspaceDto> GetWorkspace(TodoItemIdDto idDto)
+    {
+        var todoItem = await _context
+            .TodoItems.Where(x => x.Id == idDto.Id)
+            .Include(x => x.Workspace)
+            .FirstOrDefaultAsync();
+
+        if (todoItem == null)
+        {
+            throw new NotFoundException();
+        }
+
+        return todoItem.Workspace.ToDto();
+    }
+
     public async Task<IEnumerable<AuthorDto>> Authors(
         TodoItemIdDto idDto,
         AuthorFindMany authorFindMany

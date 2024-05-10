@@ -14,6 +14,8 @@ public interface ITodoItemsService
 
     public Task DeleteTodoItem(TodoItemIdDto idDto);
 
+    public Task<WorkspaceDto> GetWorkspace(TodoItemIdDto idDto);
+
     public Task<IEnumerable<AuthorDto>> Authors(TodoItemIdDto idDto, AuthorFindMany authorFindMany);
 
     public Task ConnectAuthors(TodoItemIdDto idDto, AuthorIdDto[] todoItemsId);

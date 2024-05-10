@@ -85,6 +85,14 @@ public abstract class TodoItemsControllerBase : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("{Id}/workspace")]
+    [Authorize(Roles = "admin,user")]
+    public async Task<ActionResult<WorkspaceDto>> GetWorkspace([FromRoute] TodoItemIdDto idDto)
+    {
+        var authors = await _service.GetWorkspace(idDto);
+        return Ok(authors);
+    }
+
     [HttpGet("{Id}/authors")]
     [Authorize(Roles = "admin,user")]
     public async Task<ActionResult<IEnumerable<AuthorDto>>> Authors(
