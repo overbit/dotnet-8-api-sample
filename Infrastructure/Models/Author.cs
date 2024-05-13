@@ -7,9 +7,10 @@ namespace MyService.Infrastructure.Models;
 public class Author
 {
     [Key, Required]
+    [Range(1, long.MaxValue)]
     public long Id { get; set; }
 
-    [StringLength(100)]
+    [StringLength(250)]
     public string? Name { get; set; }
 
     public ICollection<TodoItem> TodoItems { get; set; } = new List<TodoItem>(); // Many-to-Many
