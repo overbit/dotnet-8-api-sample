@@ -7,6 +7,7 @@ namespace MyService.Infrastructure.Models;
 public class Tag
 {
     [Key]
+    [Range(1, long.MaxValue)]
     public long Id { get; set; }
 
     public string? Value { get; set; }
