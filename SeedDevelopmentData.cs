@@ -6,6 +6,9 @@ namespace MyService;
 
 public class SeedDevelopmentData
 {
+    private static string devEmail = "dev@email.local";
+    private static string devPassword = "1Password!";
+
     public static async Task SeedDevUser(
         IServiceProvider serviceProvider,
         IConfiguration configuration
@@ -16,35 +19,31 @@ public class SeedDevelopmentData
             .GetSection("AmplicationRoles")
             .AsEnumerable()
             .Where(x => x.Value != null)
-            .Select(x => x.Value.ToString())
+            .Select(x => x.Value?.ToString())
             .ToArray();
 
         var user = new User
         {
-            UserName = "developer",
-            NormalizedUserName = "developer",
-            Email = "developer@email.local",
-            NormalizedEmail = "developer@email.local",
+            UserName = devEmail,
+            NormalizedUserName = devEmail.ToUpperInvariant(),
+            Email = devEmail,
+            NormalizedEmail = devEmail.ToUpperInvariant(),
             EmailConfirmed = true,
             LockoutEnabled = false,
-            SecurityStamp = Guid.NewGuid().ToString()
         };
 
         if (!context.Users.Any(u => u.UserName == user.UserName))
         {
-            var password = new PasswordHasher<User>();
-            var hashed = password.HashPassword(user, "password");
-            user.PasswordHash = hashed;
-            var userStore = new UserStore<User>(context);
-            await userStore.CreateAsync(user);
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            var ca = await userManager.CreateAsync(user);
+            var ap = await userManager.AddPasswordAsync(user, devPassword);
+
             var _roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             foreach (var role in amplicationRoles)
             {
-                await userStore.AddToRoleAsync(user, _roleManager.NormalizeKey(role));
+                await userManager.AddToRoleAsync(user, _roleManager.NormalizeKey(role));
             }
         }
-
-        await context.SaveChangesAsync();
     }
 }

@@ -39,12 +39,7 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
             throw new NotFoundException();
         }
 
-        return new TodoItemDto
-        {
-            Id = todo.Id,
-            Name = todo.Name,
-            IsComplete = todo.IsComplete
-        };
+        return todo.ToDto();
     }
 
     public async Task UpdateTodoItem(TodoItemIdDto idDto, TodoItemUpdateInput updateDto)
@@ -104,20 +99,35 @@ public abstract class TodoItemsServiceBase : ITodoItemsService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<AuthorDto>> Authors(
-        TodoItemIdDto idDto,
-        AuthorFindMany authorFindMany
-    )
+    public async Task<WorkspaceDto> GetWorkspace(TodoItemIdDto idDto)
     {
-        var todoItem = await _context.TodoItems.FindAsync(idDto.Id);
+        var todoItem = await _context
+            .TodoItems.Where(x => x.Id == idDto.Id)
+            .Include(x => x.Workspace)
+            .FirstOrDefaultAsync();
+
         if (todoItem == null)
         {
             throw new NotFoundException();
         }
 
-        return todoItem
-            .Authors.Select(author => new AuthorDto { Id = author.Id, Name = author.Name })
-            .ToList();
+        return todoItem.Workspace.ToDto();
+    }
+
+    public async Task<IEnumerable<AuthorDto>> FindAuthors(
+        TodoItemIdDto idDto,
+        AuthorFindMany authorFindMany
+    )
+    {
+        var authors = await _context
+            .Authors.Where(a => a.TodoItems.Any(t => t.Id == idDto.Id))
+            .ApplyWhere(authorFindMany.Where)
+            .ApplySkip(authorFindMany.Skip)
+            .ApplyTake(authorFindMany.Take)
+            .ApplyOrderBy(authorFindMany.SortBy)
+            .ToListAsync();
+
+        return authors.Select(x => x.ToDto());
     }
 
     public async Task ConnectAuthors(TodoItemIdDto idDto, AuthorIdDto[] authorIdDtos)

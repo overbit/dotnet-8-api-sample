@@ -98,7 +98,7 @@ public abstract class WorkspacesControllerBase : ControllerBase
     {
         try
         {
-            return Ok(await _service.TodoItems(idDto, filter));
+            return Ok(await _service.FindTodoItems(idDto, filter));
         }
         catch (NotFoundException)
         {

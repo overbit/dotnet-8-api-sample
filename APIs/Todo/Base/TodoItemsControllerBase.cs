@@ -85,6 +85,14 @@ public abstract class TodoItemsControllerBase : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("{Id}/workspace")]
+    [Authorize(Roles = "admin,user")]
+    public async Task<ActionResult<WorkspaceDto>> GetWorkspace([FromRoute] TodoItemIdDto idDto)
+    {
+        var workspace = await _service.GetWorkspace(idDto);
+        return Ok(workspace);
+    }
+
     [HttpGet("{Id}/authors")]
     [Authorize(Roles = "admin,user")]
     public async Task<ActionResult<IEnumerable<AuthorDto>>> Authors(
@@ -92,7 +100,7 @@ public abstract class TodoItemsControllerBase : ControllerBase
         [FromQuery] AuthorFindMany filter
     )
     {
-        var authors = await _service.Authors(idDto, filter);
+        var authors = await _service.FindAuthors(idDto, filter);
         return Ok(authors);
     }
 

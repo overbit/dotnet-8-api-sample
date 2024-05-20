@@ -6,7 +6,7 @@ public class TodoItemDto : TodoItemIdDto
 
     public bool IsComplete { get; set; }
 
-    public WorkspaceIdDto WorkspaceId { get; set; }
+    public required WorkspaceIdDto WorkspaceId { get; set; }
 
     public ICollection<AuthorIdDto>? AuthorIds { get; set; }
 }
