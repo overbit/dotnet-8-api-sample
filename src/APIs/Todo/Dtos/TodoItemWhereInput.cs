@@ -6,6 +6,7 @@ public class TodoItemWhereInput
 {
     [Range(1, long.MaxValue)]
     public long? Id { get; set; }
+
     [StringLength(250)]
     public string? Name { get; set; }
 
